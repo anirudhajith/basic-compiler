@@ -131,5 +131,8 @@ switch(grade) {
    	**ptr = ((5));
 	*(ptr) = 5;
 	a.b++;
+	int a = -5 * &(6&7) * *p;
+	char* hello = "hello" "5 6";
+	//int a = 5 6;
 
 }

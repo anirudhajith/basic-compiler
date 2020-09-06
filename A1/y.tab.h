@@ -68,18 +68,16 @@ extern int yydebug;
     CHAR = 278,
     IDENTIFIER = 279,
     RELATIONALOP = 280,
-    BINARYARIOP = 281,
-    UNARYOP = 282,
-    LOGICALOP = 283,
-    CREMENTOP = 284,
-    EQ = 285,
-    STRUCTFIELDACCESSOP = 286,
-    DEREF = 287,
-    ADDRESSOF = 288,
-    CHARACTER = 289,
-    NUMBER = 290,
-    REALNUMBER = 291,
-    STRING = 292
+    LOGICALOP = 281,
+    CREMENTOP = 282,
+    EQ = 283,
+    STRUCTFIELDACCESSOP = 284,
+    DEREF = 285,
+    ADDRESSOF = 286,
+    CHARACTER = 287,
+    NUMBER = 288,
+    REALNUMBER = 289,
+    STRING = 290
   };
 #endif
 /* Tokens.  */
@@ -106,18 +104,16 @@ extern int yydebug;
 #define CHAR 278
 #define IDENTIFIER 279
 #define RELATIONALOP 280
-#define BINARYARIOP 281
-#define UNARYOP 282
-#define LOGICALOP 283
-#define CREMENTOP 284
-#define EQ 285
-#define STRUCTFIELDACCESSOP 286
-#define DEREF 287
-#define ADDRESSOF 288
-#define CHARACTER 289
-#define NUMBER 290
-#define REALNUMBER 291
-#define STRING 292
+#define LOGICALOP 281
+#define CREMENTOP 282
+#define EQ 283
+#define STRUCTFIELDACCESSOP 284
+#define DEREF 285
+#define ADDRESSOF 286
+#define CHARACTER 287
+#define NUMBER 288
+#define REALNUMBER 289
+#define STRING 290
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

@@ -1,7 +1,7 @@
 %token IF ELSE WHILE DO FOR SWITCH CASE DEFAULT EXTERN STRUCT BREAK CONTINUE RETURN SIZEOF
 %token INT LONG SHORT FLOAT DOUBLE VOID CHAR
 %token IDENTIFIER
-%token RELATIONALOP LOGICALOP CREMENTOP EQ STRUCTFIELDACCESSOP DEREF ADDRESSOF
+%token RELATIONALOP BINARYARIOP UNARYOP LOGICALOP CREMENTOP EQ STRUCTFIELDACCESSOP DEREF ADDRESSOF
 %token CHARACTER NUMBER REALNUMBER STRING
 %{
 	#include <stdio.h>
@@ -33,6 +33,7 @@ statement: ifstatement
 	| dowhilestatement
 	| switchstatement
 	| returnstatement
+	| assignmentstatement
 	| functioncallstatement
 	| emptystatement
 	| breakstatement
@@ -51,7 +52,9 @@ degenerableblock: block
 ;
 
 assignment: value EQ expression ;
-
+assignmentlist: assignmentlist ',' assignment
+	| assignment
+;
 declaration: variable | variable EQ expression;
 declarationlist: declarationlist ',' declaration
 	| declaration
@@ -73,24 +76,21 @@ expressionlist: expressionlist ',' expression
 ;
 
 argument: type IDENTIFIER
-	| type addressof IDENTIFIER
+	| type ADDRESSOF IDENTIFIER
 	| type IDENTIFIER '[' ']'
 	| type IDENTIFIER '[' expression ']'
-	| type addressof IDENTIFIER '[' ']'
-	| type addressof IDENTIFIER '[' expression ']'
+	| type ADDRESSOF IDENTIFIER '[' ']'
+	| type ADDRESSOF IDENTIFIER '[' expression ']'
 ;
 
 argumentlist: argumentlist ',' argument
 	| argument
 ;
 
-structmemberlist: structmemberlist ',' structmember
-	| structmember
-;
-
-structmember: IDENTIFIER
-	| IDENTIFIER '[' expression ']'
+identifierlist: identifierlist ',' IDENTIFIER
+	| IDENTIFIER
 	| IDENTIFIER '[' ']'
+	| IDENTIFIER '[' expression ']'
 ;
 
 functioncall: IDENTIFIER '(' ')'
@@ -108,10 +108,10 @@ functiondeclaration: type IDENTIFIER '(' argumentlist ')' ';'
 ifstatement: IF '(' expression ')' degenerableblock
 	| IF '(' expression ')' degenerableblock ELSE degenerableblock
 ;
-forstatement: FOR '(' expressionlist ';' expressionlist ';' expressionlist ')' degenerableblock
-	| FOR '(' expressionlist ';' expressionlist ';' ')' degenerableblock
-	| FOR '(' expressionlist ';' ';' expressionlist ')' degenerableblock
-	| FOR '(' expressionlist ';' ';' ')' degenerableblock
+forstatement: FOR '(' assignmentlist ';' expressionlist ';' expressionlist ')' degenerableblock
+	| FOR '(' assignmentlist ';' expressionlist ';' ')' degenerableblock
+	| FOR '(' assignmentlist ';' ';' expressionlist ')' degenerableblock
+	| FOR '(' assignmentlist ';' ';' ')' degenerableblock
 	| FOR '(' ';' expressionlist ';' expressionlist ')' degenerableblock
 	| FOR '(' ';' expressionlist ';' ')' degenerableblock
 	| FOR '(' ';'  ';' expressionlist ')' degenerableblock
@@ -126,7 +126,7 @@ switchstatement: SWITCH '(' expression ')' '{' caselist '}'
 returnstatement: RETURN ';'
 	| RETURN expression ';'
 ;
-
+assignmentstatement: assignmentlist ';';
 functioncallstatement: functioncall ';';
 emptystatement: ';';
 breakstatement: BREAK ';';
@@ -140,13 +140,15 @@ structdeclaration: STRUCT IDENTIFIER '{' memberdeclaratationlist '}'
 	| STRUCT IDENTIFIER '{' '}'
 ;
 
-memberdeclaratation: type structmemberlist ';'
-	| type ';';
+memberdeclaratation: type identifierlist ';'
+	| type ';'
+;
+
 memberdeclaratationlist: memberdeclaratationlist memberdeclaratation
 	| memberdeclaratation
 ;
 
-type: primarytype deref
+type: primarytype DEREF
 	| primarytype
 ;
 
@@ -164,29 +166,8 @@ primarytype: VOID
 ;
 
 binaryop: RELATIONALOP
-	| LOGICALOP
-	| '+'
-	| '-'
-	| '*'
-	| '/'
-	| '&'
-	| '|'
-	| '^'
-	| '%'
+	| BINARYARIOP
 ;
-
-deref: deref '*'
-	| '*';
-
-unaryop:  '+'
-	| '-'
-	| '!'
-	| '*'
-	| addressof
-	| '~'
-;
-
-addressof: '&';
 
 literal: CHARACTER
 	| NUMBER
@@ -203,11 +184,13 @@ variable: IDENTIFIER '[' expression ']'
 
 value: literal
 	| variable
+	| ADDRESSOF variable
+	| DEREF variable
 	| '(' expression ')'
 	| '(' primarytype ')' value
 	| CREMENTOP value
 	| value CREMENTOP
-	| unaryop value
+	| UNARYOP value
 	| sizeof
 ;
 
@@ -218,7 +201,6 @@ sizeof: SIZEOF '(' type ')'
 expression: value
 	| expression binaryop value
 	| '(' type ')' expression
-	| assignment
 ;
 
 

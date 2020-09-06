@@ -33,13 +33,13 @@ char                        { return CHAR; }
 
 [a-zA-Z_][a-zA-Z_0-9]*      { return IDENTIFIER; }
 
-
+\*+                         { return DEREF; }
+\&                          { return ADDRESSOF; }
 (<|>|==|<=|>=|!=|<=>)       { return RELATIONALOP; }
-
+(\+|\-|\*|\/|\&|\||\^|\%)   { return BINARYARIOP; }
+(\+|\-|\!|\*|\&|\~)         { return UNARYOP; }
 (\&\&|\|\|)                 { return LOGICALOP; }
 (\+\+|\-\-)                 { return CREMENTOP; }
-(\+|\-|\*|\/|\&|\||\^|\%)   { return yytext[0]; }
-(\+|\-|\!|\*|\&|\~)         { return yytext[0]; }
 =                           { return EQ; }
 (\.|->)                     { return STRUCTFIELDACCESSOP; }
 

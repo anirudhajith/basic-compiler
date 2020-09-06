@@ -138,6 +138,9 @@ switch(grade) {
 
 	{
 		int thisis = "a new scope";
+		{
+			int thisis = "an even" "smaller score";
+		}
 	}
 
 }

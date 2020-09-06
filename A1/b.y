@@ -8,19 +8,24 @@
 	void yyerror(char *);
 	int yylex(void);
 	char mytext[100];
+	int numGlobalDeclarations = 0;
+	int numFunctionDefinitions = 0;
+	int numIntegerConstants = 0;
+	int numPointerDeclarations = 0;
+	int numIfWithoutElse = 0;
 %}
 
 %%
 
 program: lines;
 
-lines: oneline 
-	| lines oneline
+lines: oneline 								{ numGlobalDeclarations++; }
+	| lines oneline							{ numGlobalDeclarations++; }
 ;
 
 oneline: statement
 	| functiondeclaration
-	| functiondefinition
+	| functiondefinition					{ numFunctionDefinitions++; }
 ;
 
 statements: statements degenerableblock
@@ -48,6 +53,22 @@ block: '{' statements '}'
 
 degenerableblock: block
 	| statement
+;
+
+degenerableblockwithoutif:
+	| block
+	| forstatement
+	| whilestatement
+	| dowhilestatement
+	| switchstatement
+	| returnstatement
+	| functioncallstatement
+	| emptystatement
+	| breakstatement
+	| continuestatement
+	| variabledeclarationstatement
+	| structdeclarationstatement
+	| expressionstatment
 ;
 
 assignment: value EQ expression ;
@@ -105,8 +126,9 @@ functiondeclaration: type IDENTIFIER '(' argumentlist ')' ';'
 	| type IDENTIFIER '('')' ';'
 ;
 
-ifstatement: IF '(' expression ')' degenerableblock
-	| IF '(' expression ')' degenerableblock ELSE degenerableblock
+ifstatement: IF '(' expression ')' degenerableblock								{ numIfWithoutElse++; }
+	| IF '(' expression ')' degenerableblock ELSE degenerableblockwithoutif		
+	| IF '(' expression ')' degenerableblock ELSE ifstatement
 ;
 forstatement: FOR '(' expressionlist ';' expressionlist ';' expressionlist ')' degenerableblock
 	| FOR '(' expressionlist ';' expressionlist ';' ')' degenerableblock
@@ -146,9 +168,11 @@ memberdeclaratationlist: memberdeclaratationlist memberdeclaratation
 	| memberdeclaratation
 ;
 
-type: primarytype deref
+type: primarytype deref								{ numPointerDeclarations++; }
 	| primarytype
 ;
+
+castingtype: primarytype deref;
 
 primarytype: VOID 
 	| INT
@@ -189,7 +213,7 @@ unaryop:  '+'
 addressof: '&';
 
 literal: CHARACTER
-	| NUMBER
+	| NUMBER									{ numIntegerConstants++; }
 	| REALNUMBER
 	| stringlist
 ;
@@ -221,7 +245,7 @@ sizeof: SIZEOF '(' type ')'
 
 expression: value
 	| expression binaryop value
-	| '(' type ')' expression
+	| '(' castingtype ')' expression
 	| assignment
 ;
 
@@ -234,7 +258,13 @@ void yyerror(char *s) {
 
 int main(void) {
     yyparse();
-	fprintf(stdout, "parsed successfully\n");
+	printf("***parsing successful***\n");
+	printf("#global_declarations = %d\n", numGlobalDeclarations);
+	printf("#function_definitions = %d\n", numFunctionDefinitions);
+	printf("#integer_constants = %d\n", numIntegerConstants);
+	printf("#pointer_declarations = %d\n", numPointerDeclarations);
+	printf("#if_without_else = %d\n", numIfWithoutElse);
+	printf("if-else max-depth = \n");
     return 0;
 }
 

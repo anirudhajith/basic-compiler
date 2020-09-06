@@ -67,6 +67,7 @@
 	#include <stdio.h>
 	void yyerror(char *);
 	int yylex(void);
+	extern FILE* yyin; 
 	char mytext[100];
 	int numGlobalDeclarations = 0;
 	int numFunctionDefinitions = 0;
@@ -82,7 +83,7 @@
 		else return b;
 	}
 
-#line 86 "y.tab.c" /* yacc.c:339  */
+#line 87 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -203,7 +204,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 207 "y.tab.c" /* yacc.c:358  */
+#line 208 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -504,23 +505,23 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    28,    28,    30,    31,    34,    35,    36,    37,    40,
-      41,    44,    45,    46,    47,    48,    49,    50,    51,    52,
-      53,    54,    55,    56,    59,    60,    61,    62,    63,    64,
-      65,    66,    67,    68,    69,    70,    73,    74,    77,    78,
-      81,    83,    83,    84,    85,    88,    89,    91,    92,    93,
-      95,    96,    99,   100,   103,   104,   105,   106,   109,   110,
-     113,   114,   117,   118,   121,   122,   125,   126,   129,   130,
-     133,   134,   137,   138,   141,   142,   143,   144,   147,   148,
-     149,   150,   151,   152,   153,   154,   156,   157,   158,   159,
-     162,   163,   166,   167,   168,   169,   170,   171,   173,   174,
-     175,   176,   179,   180,   181,   182,   185,   186,   189,   191,
-     192,   193,   194,   195,   196,   197,   198,   199,   200,   201,
-     204,   205,   206,   207,   208,   209,   210,   211,   212,   213,
-     216,   217,   219,   220,   221,   222,   223,   224,   227,   229,
-     230,   231,   232,   235,   236,   239,   240,   241,   242,   245,
-     246,   247,   248,   249,   250,   251,   252,   255,   256,   259,
-     260,   261,   262
+       0,    29,    29,    31,    32,    35,    36,    37,    38,    41,
+      42,    45,    46,    47,    48,    49,    50,    51,    52,    53,
+      54,    55,    56,    57,    60,    61,    62,    63,    64,    65,
+      66,    67,    68,    69,    70,    71,    74,    75,    78,    79,
+      82,    84,    84,    85,    86,    89,    90,    92,    93,    94,
+      96,    97,   100,   101,   104,   105,   106,   107,   110,   111,
+     114,   115,   118,   119,   122,   123,   126,   127,   130,   131,
+     134,   135,   138,   139,   142,   143,   144,   145,   148,   149,
+     150,   151,   152,   153,   154,   155,   157,   158,   159,   160,
+     163,   164,   167,   168,   169,   170,   171,   172,   174,   175,
+     176,   177,   180,   181,   182,   183,   186,   187,   190,   192,
+     193,   194,   195,   196,   197,   198,   199,   200,   201,   202,
+     205,   206,   207,   208,   209,   210,   211,   212,   213,   214,
+     217,   218,   220,   221,   222,   223,   224,   225,   228,   230,
+     231,   232,   233,   236,   237,   240,   241,   242,   243,   246,
+     247,   248,   249,   250,   251,   252,   253,   256,   257,   260,
+     261,   262,   263
 };
 #endif
 
@@ -1607,289 +1608,289 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 30 "b.y" /* yacc.c:1646  */
+#line 31 "b.y" /* yacc.c:1646  */
     { numGlobalDeclarations++; }
-#line 1613 "y.tab.c" /* yacc.c:1646  */
+#line 1614 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 31 "b.y" /* yacc.c:1646  */
+#line 32 "b.y" /* yacc.c:1646  */
     { numGlobalDeclarations++; }
-#line 1619 "y.tab.c" /* yacc.c:1646  */
+#line 1620 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 37 "b.y" /* yacc.c:1646  */
+#line 38 "b.y" /* yacc.c:1646  */
     { numFunctionDefinitions++; }
-#line 1625 "y.tab.c" /* yacc.c:1646  */
+#line 1626 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 40 "b.y" /* yacc.c:1646  */
+#line 41 "b.y" /* yacc.c:1646  */
     { (yyval) = max((yyvsp[-1]), (yyvsp[0])); maxHeight = max(maxHeight, (yyval)); }
-#line 1631 "y.tab.c" /* yacc.c:1646  */
+#line 1632 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 41 "b.y" /* yacc.c:1646  */
+#line 42 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1637 "y.tab.c" /* yacc.c:1646  */
+#line 1638 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 44 "b.y" /* yacc.c:1646  */
+#line 45 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1643 "y.tab.c" /* yacc.c:1646  */
+#line 1644 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 45 "b.y" /* yacc.c:1646  */
+#line 46 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1649 "y.tab.c" /* yacc.c:1646  */
+#line 1650 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 46 "b.y" /* yacc.c:1646  */
+#line 47 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1655 "y.tab.c" /* yacc.c:1646  */
+#line 1656 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 47 "b.y" /* yacc.c:1646  */
+#line 48 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1661 "y.tab.c" /* yacc.c:1646  */
+#line 1662 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 48 "b.y" /* yacc.c:1646  */
+#line 49 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1667 "y.tab.c" /* yacc.c:1646  */
+#line 1668 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 49 "b.y" /* yacc.c:1646  */
+#line 50 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1673 "y.tab.c" /* yacc.c:1646  */
+#line 1674 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 50 "b.y" /* yacc.c:1646  */
+#line 51 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1679 "y.tab.c" /* yacc.c:1646  */
+#line 1680 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 51 "b.y" /* yacc.c:1646  */
+#line 52 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1685 "y.tab.c" /* yacc.c:1646  */
+#line 1686 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 52 "b.y" /* yacc.c:1646  */
+#line 53 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1691 "y.tab.c" /* yacc.c:1646  */
+#line 1692 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 53 "b.y" /* yacc.c:1646  */
+#line 54 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1697 "y.tab.c" /* yacc.c:1646  */
+#line 1698 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 54 "b.y" /* yacc.c:1646  */
+#line 55 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1703 "y.tab.c" /* yacc.c:1646  */
+#line 1704 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 55 "b.y" /* yacc.c:1646  */
+#line 56 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1709 "y.tab.c" /* yacc.c:1646  */
+#line 1710 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 56 "b.y" /* yacc.c:1646  */
+#line 57 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1715 "y.tab.c" /* yacc.c:1646  */
+#line 1716 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 73 "b.y" /* yacc.c:1646  */
+#line 74 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[-1]); maxHeight = max(maxHeight, (yyval)); }
-#line 1721 "y.tab.c" /* yacc.c:1646  */
+#line 1722 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 74 "b.y" /* yacc.c:1646  */
+#line 75 "b.y" /* yacc.c:1646  */
     { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
-#line 1727 "y.tab.c" /* yacc.c:1646  */
+#line 1728 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 77 "b.y" /* yacc.c:1646  */
+#line 78 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1733 "y.tab.c" /* yacc.c:1646  */
+#line 1734 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 78 "b.y" /* yacc.c:1646  */
+#line 79 "b.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1739 "y.tab.c" /* yacc.c:1646  */
+#line 1740 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 88 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1745 "y.tab.c" /* yacc.c:1646  */
+#line 89 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1746 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 89 "b.y" /* yacc.c:1646  */
-    { (yyval) = 0; }
-#line 1751 "y.tab.c" /* yacc.c:1646  */
+#line 90 "b.y" /* yacc.c:1646  */
+    { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
+#line 1752 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 91 "b.y" /* yacc.c:1646  */
-    { (yyval) = max((yyval), (yyvsp[-1])); }
-#line 1757 "y.tab.c" /* yacc.c:1646  */
+#line 92 "b.y" /* yacc.c:1646  */
+    { (yyval) = max((yyvsp[-1]), (yyvsp[0])); maxHeight = max(maxHeight, (yyval)); }
+#line 1758 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 92 "b.y" /* yacc.c:1646  */
-    { (yyval) = max((yyval), (yyvsp[0])); }
-#line 1763 "y.tab.c" /* yacc.c:1646  */
+#line 93 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1764 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 93 "b.y" /* yacc.c:1646  */
-    { (yyval) = max((yyval), (yyvsp[0])); }
-#line 1769 "y.tab.c" /* yacc.c:1646  */
+#line 94 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1770 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 95 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1775 "y.tab.c" /* yacc.c:1646  */
+#line 96 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1776 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 96 "b.y" /* yacc.c:1646  */
-    { (yyval) = 0; }
-#line 1781 "y.tab.c" /* yacc.c:1646  */
+#line 97 "b.y" /* yacc.c:1646  */
+    { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
+#line 1782 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 141 "b.y" /* yacc.c:1646  */
+#line 142 "b.y" /* yacc.c:1646  */
     { numIfWithoutElse++; (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
-#line 1787 "y.tab.c" /* yacc.c:1646  */
+#line 1788 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 142 "b.y" /* yacc.c:1646  */
-    { (yyval) = max(1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
-#line 1793 "y.tab.c" /* yacc.c:1646  */
+#line 143 "b.y" /* yacc.c:1646  */
+    { (yyval) = max((yyvsp[0]) + 1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
+#line 1794 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 143 "b.y" /* yacc.c:1646  */
+#line 144 "b.y" /* yacc.c:1646  */
     { (yyval) = max((yyvsp[0]) + 1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
-#line 1799 "y.tab.c" /* yacc.c:1646  */
+#line 1800 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 144 "b.y" /* yacc.c:1646  */
+#line 145 "b.y" /* yacc.c:1646  */
     { (yyval) = max((yyvsp[0]) + 1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
-#line 1805 "y.tab.c" /* yacc.c:1646  */
+#line 1806 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 147 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1811 "y.tab.c" /* yacc.c:1646  */
+#line 148 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1812 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 148 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1817 "y.tab.c" /* yacc.c:1646  */
+#line 149 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1818 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 149 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1823 "y.tab.c" /* yacc.c:1646  */
+#line 150 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1824 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 150 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1829 "y.tab.c" /* yacc.c:1646  */
+#line 151 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1830 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 151 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1835 "y.tab.c" /* yacc.c:1646  */
+#line 152 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1836 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 152 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1841 "y.tab.c" /* yacc.c:1646  */
+#line 153 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1842 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 153 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1847 "y.tab.c" /* yacc.c:1646  */
+#line 154 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1848 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 154 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1853 "y.tab.c" /* yacc.c:1646  */
+#line 155 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1854 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 156 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1859 "y.tab.c" /* yacc.c:1646  */
+#line 157 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
+#line 1860 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 157 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-5]); }
-#line 1865 "y.tab.c" /* yacc.c:1646  */
+#line 158 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[-5]); maxHeight = max(maxHeight, (yyval)); }
+#line 1866 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 158 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 1871 "y.tab.c" /* yacc.c:1646  */
+#line 159 "b.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[-1]); maxHeight = max(maxHeight, (yyval)); }
+#line 1872 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 159 "b.y" /* yacc.c:1646  */
-    { (yyval) = 0; }
-#line 1877 "y.tab.c" /* yacc.c:1646  */
+#line 160 "b.y" /* yacc.c:1646  */
+    { (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
+#line 1878 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 185 "b.y" /* yacc.c:1646  */
+#line 186 "b.y" /* yacc.c:1646  */
     { numPointerDeclarations++; }
-#line 1883 "y.tab.c" /* yacc.c:1646  */
+#line 1884 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 140:
-#line 230 "b.y" /* yacc.c:1646  */
+#line 231 "b.y" /* yacc.c:1646  */
     { numIntegerConstants++; }
-#line 1889 "y.tab.c" /* yacc.c:1646  */
+#line 1890 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1893 "y.tab.c" /* yacc.c:1646  */
+#line 1894 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2117,25 +2118,36 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 266 "b.y" /* yacc.c:1906  */
+#line 267 "b.y" /* yacc.c:1906  */
 
 
 void yyerror(char *s) {
-    fprintf(stderr, "***parsing terminated*** [%s]\n", s);
+    fprintf(stderr, "***parsing terminated*** [syntax error]\n");
 	error = 1;
 }
 
-int main(void) {
-    yyparse();
-	if (error == 0) {
-		printf("***parsing successful***\n");
-		printf("#global_declarations = %d\n", numGlobalDeclarations);
-		printf("#function_definitions = %d\n", numFunctionDefinitions);
-		printf("#integer_constants = %d\n", numIntegerConstants);
-		printf("#pointer_declarations = %d\n", numPointerDeclarations);
-		printf("#if_without_else = %d\n", numIfWithoutElse);
-		printf("if-else max-depth = %d\n", maxHeight);
-	}
+int main(int argc, char* argv[]) {
+	
+	FILE *file;
+	if (argc != 2) {
+		fprintf(stderr, "***process terminated*** [input error]: invalid number of command-line arguments\n");
+		error = 3;
+	} else if (yyin = fopen(argv[1], "r")) {
+		yyparse();
+		if (error == 0) {
+			printf("***parsing successful***\n");
+			printf("#global_declarations = %d\n", numGlobalDeclarations);
+			printf("#function_definitions = %d\n", numFunctionDefinitions);
+			printf("#integer_constants = %d\n", numIntegerConstants);
+			printf("#pointers_declarations = %d\n", numPointerDeclarations);
+			printf("#ifs_without_else = %d\n", numIfWithoutElse);
+			printf("if-else max-depth = %d\n", maxHeight);
+		}
+		fclose(yyin);
+   	} else {
+      	fprintf(stderr, "***process terminated*** [input error]: no such file %s exists\n", argv[1]);
+		error = 3;
+   	}
 
 	return error;
 }

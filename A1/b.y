@@ -7,6 +7,7 @@
 	#include <stdio.h>
 	void yyerror(char *);
 	int yylex(void);
+	extern FILE* yyin; 
 	char mytext[100];
 	int numGlobalDeclarations = 0;
 	int numFunctionDefinitions = 0;
@@ -88,9 +89,9 @@ declarationlist: declarationlist ',' declaration
 case: CASE expression ':' statements { $$ = $4; maxHeight = max(maxHeight, $$); }
 	| CASE expression ':'			 { $$ = 0; maxHeight = max(maxHeight, $$); }
 ;
-caselist: case caselist				{ $$ = max($$, $1); maxHeight = max(maxHeight, $$); }
-	| case							{ $$ = max($$, $1); maxHeight = max(maxHeight, $$); }
-	| defaultcase					{ $$ = max($$, $1); maxHeight = max(maxHeight, $$); }
+caselist: case caselist				{ $$ = max($1, $2); maxHeight = max(maxHeight, $$); }
+	| case							{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| defaultcase					{ $$ = $1; maxHeight = max(maxHeight, $$); }
 ;
 defaultcase: DEFAULT ':' statements { $$ = $3; maxHeight = max(maxHeight, $$); }
 	| DEFAULT ':'					{ $$ = 0; maxHeight = max(maxHeight, $$); }
@@ -139,7 +140,7 @@ functiondeclaration: type IDENTIFIER '(' argumentlist ')' ';'
 ;
 
 ifstatement: IF '(' expression ')' degenerableblock								{ numIfWithoutElse++; $$ = $5; maxHeight = max(maxHeight, $$); }
-	| IF '(' expression ')' degenerableblock ELSE nonifstatement				{ $$ = max(1,$5); maxHeight = max(maxHeight, $$); }		
+	| IF '(' expression ')' degenerableblock ELSE nonifstatement				{ $$ = max($7 + 1,$5); maxHeight = max(maxHeight, $$); }		
 	| IF '(' expression ')' degenerableblock ELSE ifstatement					{ $$ = max($7 + 1,$5); maxHeight = max(maxHeight, $$); }
 	| IF '(' expression ')' degenerableblock ELSE block							{ $$ = max($7 + 1,$5); maxHeight = max(maxHeight, $$); }
 ;
@@ -266,21 +267,32 @@ expression: value
 %%
 
 void yyerror(char *s) {
-    fprintf(stderr, "***parsing terminated*** [%s]\n", s);
+    fprintf(stderr, "***parsing terminated*** [syntax error]\n");
 	error = 1;
 }
 
-int main(void) {
-    yyparse();
-	if (error == 0) {
-		printf("***parsing successful***\n");
-		printf("#global_declarations = %d\n", numGlobalDeclarations);
-		printf("#function_definitions = %d\n", numFunctionDefinitions);
-		printf("#integer_constants = %d\n", numIntegerConstants);
-		printf("#pointer_declarations = %d\n", numPointerDeclarations);
-		printf("#if_without_else = %d\n", numIfWithoutElse);
-		printf("if-else max-depth = %d\n", maxHeight);
-	}
+int main(int argc, char* argv[]) {
+	
+	FILE *file;
+	if (argc != 2) {
+		fprintf(stderr, "***process terminated*** [input error]: invalid number of command-line arguments\n");
+		error = 3;
+	} else if (yyin = fopen(argv[1], "r")) {
+		yyparse();
+		if (error == 0) {
+			printf("***parsing successful***\n");
+			printf("#global_declarations = %d\n", numGlobalDeclarations);
+			printf("#function_definitions = %d\n", numFunctionDefinitions);
+			printf("#integer_constants = %d\n", numIntegerConstants);
+			printf("#pointers_declarations = %d\n", numPointerDeclarations);
+			printf("#ifs_without_else = %d\n", numIfWithoutElse);
+			printf("if-else max-depth = %d\n", maxHeight);
+		}
+		fclose(yyin);
+   	} else {
+      	fprintf(stderr, "***process terminated*** [input error]: no such file %s exists\n", argv[1]);
+		error = 3;
+   	}
 
 	return error;
 }

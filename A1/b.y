@@ -17,7 +17,7 @@
 	int error = 0;
 
 	int max(int a, int b) {
-		printf("%d %d\n", a, b);
+		//printf("%d %d\n", a, b);
 		if (a > b) return a;
 		else return b;
 	}
@@ -42,10 +42,10 @@ statements: statements degenerableblock		{ $$ = max($1, $2); maxHeight = max(max
 ;
 
 statement: ifstatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
-	| forstatement							{ $$ = $; maxHeight = max(maxHeight, $$); }
-	| whilestatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
-	| dowhilestatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
-	| switchstatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| forstatement							{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| whilestatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| dowhilestatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| switchstatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
 	| returnstatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| functioncallstatement					{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| emptystatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
@@ -85,15 +85,15 @@ declarationlist: declarationlist ',' declaration
 	| declaration
 ;
 
-case: CASE expression ':' statements
-	| CASE expression ':'
+case: CASE expression ':' statements { $$ = $4; maxHeight = max(maxHeight, $$); }
+	| CASE expression ':'			 { $$ = 0; maxHeight = max(maxHeight, $$); }
 ;
-caselist: case caselist
-	| case
-	| defaultcase
+caselist: case caselist				{ $$ = max($$, $1); maxHeight = max(maxHeight, $$); }
+	| case							{ $$ = max($$, $1); maxHeight = max(maxHeight, $$); }
+	| defaultcase					{ $$ = max($$, $1); maxHeight = max(maxHeight, $$); }
 ;
-defaultcase: DEFAULT ':' statements
-	| DEFAULT ':'
+defaultcase: DEFAULT ':' statements { $$ = $3; maxHeight = max(maxHeight, $$); }
+	| DEFAULT ':'					{ $$ = 0; maxHeight = max(maxHeight, $$); }
 ;
 
 expressionlist: expressionlist ',' expression
@@ -144,19 +144,19 @@ ifstatement: IF '(' expression ')' degenerableblock								{ numIfWithoutElse++;
 	| IF '(' expression ')' degenerableblock ELSE block							{ $$ = max($7 + 1,$5); maxHeight = max(maxHeight, $$); }
 ;
 
-forstatement: FOR '(' expressionlist ';' expressionlist ';' expressionlist ')' degenerableblock
-	| FOR '(' expressionlist ';' expressionlist ';' ')' degenerableblock
-	| FOR '(' expressionlist ';' ';' expressionlist ')' degenerableblock
-	| FOR '(' expressionlist ';' ';' ')' degenerableblock
-	| FOR '(' ';' expressionlist ';' expressionlist ')' degenerableblock
-	| FOR '(' ';' expressionlist ';' ')' degenerableblock
-	| FOR '(' ';'  ';' expressionlist ')' degenerableblock
-	| FOR '(' ';' ';' ')' degenerableblock
+forstatement: FOR '(' expressionlist ';' expressionlist ';' expressionlist ')' degenerableblock { $$ = $9; maxHeight = max(maxHeight, $$); }
+	| FOR '(' expressionlist ';' expressionlist ';' ')' degenerableblock						{ $$ = $8; maxHeight = max(maxHeight, $$); }
+	| FOR '(' expressionlist ';' ';' expressionlist ')' degenerableblock						{ $$ = $8; maxHeight = max(maxHeight, $$); }
+	| FOR '(' expressionlist ';' ';' ')' degenerableblock										{ $$ = $7; maxHeight = max(maxHeight, $$); }
+	| FOR '(' ';' expressionlist ';' expressionlist ')' degenerableblock						{ $$ = $8; maxHeight = max(maxHeight, $$); }
+	| FOR '(' ';' expressionlist ';' ')' degenerableblock										{ $$ = $7; maxHeight = max(maxHeight, $$); }
+	| FOR '(' ';' ';' expressionlist ')' degenerableblock										{ $$ = $7; maxHeight = max(maxHeight, $$); }
+	| FOR '(' ';' ';' ')' degenerableblock														{ $$ = $6; maxHeight = max(maxHeight, $$); }
 ;
-whilestatement: WHILE '(' expression ')' degenerableblock;
-dowhilestatement: DO degenerableblock WHILE '(' expression ')' ';';
-switchstatement: SWITCH '(' expression ')' '{' caselist '}'
-	| SWITCH '(' expression ')' '{' '}'
+whilestatement: WHILE '(' expression ')' degenerableblock										{ $$ = $5; maxHeight = max(maxHeight, $$); };
+dowhilestatement: DO degenerableblock WHILE '(' expression ')' ';'								{ $$ = $2; maxHeight = max(maxHeight, $$); };
+switchstatement: SWITCH '(' expression ')' '{' caselist '}'										{ $$ = $6; maxHeight = max(maxHeight, $$); }
+	| SWITCH '(' expression ')' '{' '}'															{ $$ = 0; maxHeight = max(maxHeight, $$); }
 ;
 
 returnstatement: RETURN ';'

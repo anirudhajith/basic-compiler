@@ -191,6 +191,10 @@ addressof: '&';
 literal: CHARACTER
 	| NUMBER
 	| REALNUMBER
+	| stringlist
+;
+
+stringlist: stringlist STRING
 	| STRING
 ;
 

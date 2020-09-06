@@ -1,44 +1,36 @@
-int main(){
-switch(grade) {
-      case 'A' :
-         printf("Excellent!\n" );
-         break;
-      case 'B' :
-      case 'C' :
-         printf("Well done\n" );
-         break;
-      case 'D' :
-         printf("You passed\n" );
-         break;
-      case 'F' :
-         printf("Better try again\n" );
-         break;
-      default :
-         printf("Invalid grade\n" );
-   }
-   
-   printf("Your grade is  %c\n", grade );
+int main()
+{
+	/*----valid-----*/
 
-    struct Books {
-   		char  title[50];
-   		char  author[50];
-   		char  ****subject[100];
-   		struct Books{
-	   		int a;
-			int b;
-   		}booog[0];
-   	int   book_id;
-	}book[234234];
- 	
-	struct Books Book1;        /* Declare Book1 of type Book */
-   	struct Books Book2;        /* Declare Book2 of type Book */
- 
-   /* book 1 specification */
-   Book1.book_id = (6495407);
+	6=8++;
+	6=h++;
+	d()++=6;
+	*((10+1)*u)=(3+7);
+	2=2;
+	++2=2--;
+	(a+a)=2*a; //notice the paranthesis, without which this is invalid (see below)
+	-a=7;
+	--a=7;
+	-fun((10+1)=x); //notice the paranthesis, without which this is invalid (see below)
+	-8=7;
+	y(x)=f(x)+g(x);
+	func((y(x)+c)=f(x)+g(x)); //notice the paranthesis, without which this is invalid (see below)
+	
+	//a+a=2*a; (this is invalid for this assignment)
+	//fun(a+a=2*a); (this is invalid for this assignment)
+	//fun(10+1=x); (this is invalid for this assignment)
+	//func(y(x)+c=f(x)+g(x)); (this is invalid for this assignment)
 
-   /* book 2 specification */
-   strcpy(Book2.title);
-   strcpy( Book2.author.name->abfha, "Zara Ali");
-   strcpy( Book2.subject, "Telecom Billing Tutorial");
-   Book2.book_id = 0x6495700;
 }
+
+/*
+
+***parsing successful***
+#global_declarations = 1
+#function_definitions = 1
+#integer_constants = 19
+#pointers_declarations = 0
+#ifs_without_else = 0
+if-else max-depth = 0
+
+*/

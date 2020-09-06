@@ -46,12 +46,12 @@ char                        { return CHAR; }
 \'(\\)?[a-zA-Z0-9]\'        { return CHARACTER; }
 ([0-9]+|0x[0-9a-fA-F]+)     { return NUMBER; }
 ([0-9]+\.[0-9]*|\.[0-9]+)   { return REALNUMBER; }
-\".*\"                      { return STRING; }
+\"([^\\\"]|\\.)*\"                      { return STRING; }
 
 [\;\(\)\[\]\{\}\:\,]        { return yytext[0]; }
 
 \/\/.*
-\/\*(.|\n)*\*\/
+"/*"([^*]|\*+[^*/])*\*+"/"
 
 
 \n	|

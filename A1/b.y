@@ -33,7 +33,6 @@ statement: ifstatement
 	| dowhilestatement
 	| switchstatement
 	| returnstatement
-	| assignmentstatement
 	| functioncallstatement
 	| emptystatement
 	| breakstatement
@@ -52,9 +51,7 @@ degenerableblock: block
 ;
 
 assignment: value EQ expression ;
-assignmentlist: assignmentlist ',' assignment
-	| assignment
-;
+
 declaration: variable | variable EQ expression;
 declarationlist: declarationlist ',' declaration
 	| declaration
@@ -87,8 +84,13 @@ argumentlist: argumentlist ',' argument
 	| argument
 ;
 
-identifierlist: identifierlist ',' IDENTIFIER
-	| IDENTIFIER
+structmemberlist: structmemberlist ',' structmember
+	| structmember
+;
+
+structmember: IDENTIFIER
+	| IDENTIFIER '[' expression ']'
+	| IDENTIFIER '[' ']'
 ;
 
 functioncall: IDENTIFIER '(' ')'
@@ -106,10 +108,10 @@ functiondeclaration: type IDENTIFIER '(' argumentlist ')' ';'
 ifstatement: IF '(' expression ')' degenerableblock
 	| IF '(' expression ')' degenerableblock ELSE degenerableblock
 ;
-forstatement: FOR '(' assignmentlist ';' expressionlist ';' expressionlist ')' degenerableblock
-	| FOR '(' assignmentlist ';' expressionlist ';' ')' degenerableblock
-	| FOR '(' assignmentlist ';' ';' expressionlist ')' degenerableblock
-	| FOR '(' assignmentlist ';' ';' ')' degenerableblock
+forstatement: FOR '(' expressionlist ';' expressionlist ';' expressionlist ')' degenerableblock
+	| FOR '(' expressionlist ';' expressionlist ';' ')' degenerableblock
+	| FOR '(' expressionlist ';' ';' expressionlist ')' degenerableblock
+	| FOR '(' expressionlist ';' ';' ')' degenerableblock
 	| FOR '(' ';' expressionlist ';' expressionlist ')' degenerableblock
 	| FOR '(' ';' expressionlist ';' ')' degenerableblock
 	| FOR '(' ';'  ';' expressionlist ')' degenerableblock
@@ -124,7 +126,7 @@ switchstatement: SWITCH '(' expression ')' '{' caselist '}'
 returnstatement: RETURN ';'
 	| RETURN expression ';'
 ;
-assignmentstatement: assignmentlist ';';
+
 functioncallstatement: functioncall ';';
 emptystatement: ';';
 breakstatement: BREAK ';';
@@ -138,10 +140,8 @@ structdeclaration: STRUCT IDENTIFIER '{' memberdeclaratationlist '}'
 	| STRUCT IDENTIFIER '{' '}'
 ;
 
-memberdeclaratation: type identifierlist ';'
-	| type ';'
-;
-
+memberdeclaratation: type structmemberlist ';'
+	| type ';';
 memberdeclaratationlist: memberdeclaratationlist memberdeclaratation
 	| memberdeclaratation
 ;
@@ -183,7 +183,7 @@ variable: IDENTIFIER '[' expression ']'
 value: literal
 	| variable
 	| ADDRESSOF variable
-	| DEREF variable
+	| DEREF expression
 	| '(' expression ')'
 	| '(' primarytype ')' value
 	| CREMENTOP value
@@ -199,6 +199,7 @@ sizeof: SIZEOF '(' type ')'
 expression: value
 	| expression binaryop value
 	| '(' type ')' expression
+	| assignment
 ;
 
 

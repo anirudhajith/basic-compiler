@@ -57,18 +57,18 @@ statement: ifstatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
 	| expressionstatment					{ $$ = 0; maxHeight = max(maxHeight, $$); }
 ; 
 
-nonifstatement: forstatement
-	| whilestatement
-	| dowhilestatement
-	| switchstatement
-	| returnstatement
-	| functioncallstatement
-	| emptystatement
-	| breakstatement
-	| continuestatement
-	| variabledeclarationstatement
-	| structdeclarationstatement
-	| expressionstatment
+nonifstatement: forstatement				{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| whilestatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| dowhilestatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| switchstatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
+	| returnstatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| functioncallstatement					{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| emptystatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| breakstatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| continuestatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| variabledeclarationstatement			{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| structdeclarationstatement			{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| expressionstatment					{ $$ = 0; maxHeight = max(maxHeight, $$); }
 ; 
 
 block: '{' statements '}' 			{ $$ = $2; maxHeight = max(maxHeight, $$); }

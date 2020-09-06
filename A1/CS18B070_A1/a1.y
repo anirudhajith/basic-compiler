@@ -65,8 +65,8 @@ nonifstatement: forstatement				{ $$ = $1; maxHeight = max(maxHeight, $$); }
 	| functioncallstatement					{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| emptystatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| breakstatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
-	| continuestatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
-	| variabledeclarationstatement			{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| continuestatement 					{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| variabledeclarationstatement 			{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| structdeclarationstatement			{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| expressionstatment					{ $$ = 0; maxHeight = max(maxHeight, $$); }
 ; 
@@ -267,7 +267,7 @@ expression: value
 %%
 
 void yyerror(char *s) {
-    fprintf(stderr, "***parsing terminated*** [syntax error]\n");
+    printf("***parsing terminated*** [syntax error]\n");
 	error = 1;
 }
 
@@ -275,7 +275,7 @@ int main(int argc, char* argv[]) {
 	
 	FILE *file;
 	if (argc != 2) {
-		fprintf(stderr, "***process terminated*** [input error]: invalid number of command-line arguments\n");
+		printf("***process terminated*** [input error]: invalid number of command-line arguments\n");
 		error = 3;
 	} else if (yyin = fopen(argv[1], "r")) {
 		yyparse();
@@ -290,7 +290,7 @@ int main(int argc, char* argv[]) {
 		}
 		fclose(yyin);
    	} else {
-      	fprintf(stderr, "***process terminated*** [input error]: no such file %s exists\n", argv[1]);
+      	printf("***process terminated*** [input error]: no such file %s exists\n", argv[1]);
 		error = 3;
    	}
 

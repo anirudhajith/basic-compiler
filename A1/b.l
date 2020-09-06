@@ -3,6 +3,7 @@
 	#include "y.tab.h"
 	void yyerror(char *);
 	extern char mytext[];
+	extern int error;
 %}
 
 %%
@@ -52,6 +53,7 @@ char                        { return CHAR; }
 
 \/\/.*
 "/*"([^*]|\*+[^*/])*\*+"/"
+"/*"([^*]|\*+[^*/])*		{ error = 2; printf("***lexing terminated*** [lexer error]: ill-formed comment\n");}
 
 
 \n	|

@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 39
-#define YY_END_OF_BUFFER 40
+#define YY_NUM_RULES 40
+#define YY_END_OF_BUFFER 41
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,14 +362,14 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[140] =
     {   0,
-        0,    0,   40,   38,   37,   27,   38,   26,   26,   38,
+        0,    0,   41,   39,   38,   27,   39,   26,   26,   39,
        34,   26,   26,   26,   29,   26,   31,   31,   23,   28,
        23,   22,   22,   22,   22,   22,   22,   22,   22,   22,
        22,   22,   22,   26,   27,   23,    0,   33,    0,   24,
-        0,    0,   25,   29,   32,    0,   35,   32,   31,    0,
+        0,    0,   25,   29,   32,   37,   35,   32,   31,    0,
        23,   22,   22,   22,   22,   22,   22,    4,   22,   22,
        22,   22,    1,   22,   22,   22,   22,   22,   22,   22,
-       22,   22,   30,    0,    0,   35,   32,   31,   22,   22,
+       22,   22,   30,   37,    0,   35,   32,   31,   22,   22,
        22,   22,   22,   22,   22,   22,   22,    5,   15,   22,
        22,   22,   22,   22,   22,   22,   22,   36,   22,    7,
 
@@ -540,8 +540,9 @@ char *yytext;
 	#include "y.tab.h"
 	void yyerror(char *);
 	extern char mytext[];
-#line 544 "lex.yy.c"
+	extern int error;
 #line 545 "lex.yy.c"
+#line 546 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -758,12 +759,12 @@ YY_DECL
 		}
 
 	{
-#line 8 "b.l"
+#line 9 "b.l"
 
 
-#line 11 "b.l"
+#line 12 "b.l"
     // keywords
-#line 767 "lex.yy.c"
+#line 768 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -822,201 +823,207 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "b.l"
+#line 13 "b.l"
 { return IF; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 13 "b.l"
+#line 14 "b.l"
 { return ELSE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 14 "b.l"
+#line 15 "b.l"
 { return WHILE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 15 "b.l"
+#line 16 "b.l"
 { return DO; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "b.l"
+#line 17 "b.l"
 { return FOR; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 17 "b.l"
+#line 18 "b.l"
 { return SWITCH; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 18 "b.l"
+#line 19 "b.l"
 { return CASE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 19 "b.l"
+#line 20 "b.l"
 { return DEFAULT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 20 "b.l"
+#line 21 "b.l"
 { return EXTERN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 21 "b.l"
+#line 22 "b.l"
 { return STRUCT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 22 "b.l"
+#line 23 "b.l"
 { return BREAK; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 23 "b.l"
+#line 24 "b.l"
 { return CONTINUE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 24 "b.l"
+#line 25 "b.l"
 { return RETURN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 25 "b.l"
+#line 26 "b.l"
 { return SIZEOF; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 27 "b.l"
+#line 28 "b.l"
 { return INT; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 28 "b.l"
+#line 29 "b.l"
 { return LONG; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 29 "b.l"
+#line 30 "b.l"
 { return SHORT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 30 "b.l"
+#line 31 "b.l"
 { return FLOAT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 31 "b.l"
+#line 32 "b.l"
 { return DOUBLE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 32 "b.l"
+#line 33 "b.l"
 { return VOID; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 33 "b.l"
+#line 34 "b.l"
 { return CHAR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 35 "b.l"
+#line 36 "b.l"
 { return IDENTIFIER; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 38 "b.l"
+#line 39 "b.l"
 { return RELATIONALOP; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 40 "b.l"
+#line 41 "b.l"
 { return LOGICALOP; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 41 "b.l"
+#line 42 "b.l"
 { return CREMENTOP; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 42 "b.l"
+#line 43 "b.l"
 { return yytext[0]; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 43 "b.l"
+#line 44 "b.l"
 { return yytext[0]; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 44 "b.l"
+#line 45 "b.l"
 { return EQ; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 45 "b.l"
+#line 46 "b.l"
 { return STRUCTFIELDACCESSOP; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 47 "b.l"
+#line 48 "b.l"
 { return CHARACTER; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 48 "b.l"
+#line 49 "b.l"
 { return NUMBER; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 49 "b.l"
+#line 50 "b.l"
 { return REALNUMBER; }
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 50 "b.l"
+#line 51 "b.l"
 { return STRING; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 52 "b.l"
+#line 53 "b.l"
 { return yytext[0]; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 54 "b.l"
+#line 55 "b.l"
 
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 55 "b.l"
+#line 56 "b.l"
 
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
-#line 59 "b.l"
+YY_RULE_SETUP
+#line 57 "b.l"
+{ error = 2; printf("***lexing terminated*** [lexer error]: ill-formed comment\n");}
+	YY_BREAK
 case 38:
 /* rule 38 can match eol */
+#line 61 "b.l"
+case 39:
+/* rule 39 can match eol */
 YY_RULE_SETUP
-#line 59 "b.l"
+#line 61 "b.l"
 ;
 	YY_BREAK
-case 39:
+case 40:
 YY_RULE_SETUP
-#line 60 "b.l"
+#line 62 "b.l"
 ECHO;
 	YY_BREAK
-#line 1020 "lex.yy.c"
+#line 1027 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2021,7 +2028,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 60 "b.l"
+#line 62 "b.l"
 
 
 int yywrap(void) {

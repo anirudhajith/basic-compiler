@@ -77,7 +77,7 @@
 	int error = 0;
 
 	int max(int a, int b) {
-		//printf("%d %d\n", a, b);
+		printf("%d %d\n", a, b);
 		if (a > b) return a;
 		else return b;
 	}
@@ -511,16 +511,16 @@ static const yytype_uint16 yyrline[] =
       81,    83,    83,    84,    85,    88,    89,    91,    92,    93,
       95,    96,    99,   100,   103,   104,   105,   106,   109,   110,
      113,   114,   117,   118,   121,   122,   125,   126,   129,   130,
-     133,   134,   137,   138,   141,   142,   143,   144,   146,   147,
-     148,   149,   150,   151,   152,   153,   155,   156,   157,   158,
-     161,   162,   165,   166,   167,   168,   169,   170,   172,   173,
-     174,   175,   178,   179,   180,   181,   184,   185,   188,   190,
-     191,   192,   193,   194,   195,   196,   197,   198,   199,   200,
-     203,   204,   205,   206,   207,   208,   209,   210,   211,   212,
-     215,   216,   218,   219,   220,   221,   222,   223,   226,   228,
-     229,   230,   231,   234,   235,   238,   239,   240,   241,   244,
-     245,   246,   247,   248,   249,   250,   251,   254,   255,   258,
-     259,   260,   261
+     133,   134,   137,   138,   141,   142,   143,   144,   147,   148,
+     149,   150,   151,   152,   153,   154,   156,   157,   158,   159,
+     162,   163,   166,   167,   168,   169,   170,   171,   173,   174,
+     175,   176,   179,   180,   181,   182,   185,   186,   189,   191,
+     192,   193,   194,   195,   196,   197,   198,   199,   200,   201,
+     204,   205,   206,   207,   208,   209,   210,   211,   212,   213,
+     216,   217,   219,   220,   221,   222,   223,   224,   227,   229,
+     230,   231,   232,   235,   236,   239,   240,   241,   242,   245,
+     246,   247,   248,   249,   250,   251,   252,   255,   256,   259,
+     260,   261,   262
 };
 #endif
 
@@ -1740,36 +1740,36 @@ yyreduce:
 
   case 74:
 #line 141 "b.y" /* yacc.c:1646  */
-    { numIfWithoutElse++; (yyval) = 0; maxHeight = max(maxHeight, (yyval)); }
+    { numIfWithoutElse++; (yyval) = (yyvsp[0]); maxHeight = max(maxHeight, (yyval)); }
 #line 1745 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
 #line 142 "b.y" /* yacc.c:1646  */
-    { (yyval) = 1; maxHeight = max(maxHeight, (yyval)); }
+    { (yyval) = max(1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
 #line 1751 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
 #line 143 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]) + 1; maxHeight = max(maxHeight, (yyval)); }
+    { (yyval) = max((yyvsp[0]) + 1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
 #line 1757 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
 #line 144 "b.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]) + 1; maxHeight = max(maxHeight, (yyval)); }
+    { (yyval) = max((yyvsp[0]) + 1,(yyvsp[-2])); maxHeight = max(maxHeight, (yyval)); }
 #line 1763 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 184 "b.y" /* yacc.c:1646  */
+#line 185 "b.y" /* yacc.c:1646  */
     { numPointerDeclarations++; }
 #line 1769 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 140:
-#line 229 "b.y" /* yacc.c:1646  */
+#line 230 "b.y" /* yacc.c:1646  */
     { numIntegerConstants++; }
 #line 1775 "y.tab.c" /* yacc.c:1646  */
     break;
@@ -2003,7 +2003,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 265 "b.y" /* yacc.c:1906  */
+#line 266 "b.y" /* yacc.c:1906  */
 
 
 void yyerror(char *s) {

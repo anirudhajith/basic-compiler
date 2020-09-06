@@ -1,28 +1,27 @@
-
-int main() {
-    if(1)
+int fun()
+{
+	if(1)
 		a++;
-	else if(0) 
+	else if(0) //1
 		b++;
 	else if(1)
-	{ 
-        int y = 0;
+	{ //2
+        i++;
 		if(1)
 			a++;
 		else if(0) 
-			b++; 
+			b++; //3
 		else 
-			c++; 
+			c++; //4 
 	}
 	else
-	{   
-        int x = 0;
+	{ //3
+    int j = 5;
 		if(1)
 			a++;
 		else if(0)
-			b++; 
+			b++; //4
 		else
-			c++; 
+			c++; //5 (max depth is here)	
 	}
-
 }

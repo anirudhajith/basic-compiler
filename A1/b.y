@@ -17,7 +17,7 @@
 	int error = 0;
 
 	int max(int a, int b) {
-		//printf("%d %d\n", a, b);
+		printf("%d %d\n", a, b);
 		if (a > b) return a;
 		else return b;
 	}
@@ -42,7 +42,7 @@ statements: statements degenerableblock		{ $$ = max($1, $2); maxHeight = max(max
 ;
 
 statement: ifstatement						{ $$ = $1; maxHeight = max(maxHeight, $$); }
-	| forstatement							{ $$ = 0; maxHeight = max(maxHeight, $$); }
+	| forstatement							{ $$ = $; maxHeight = max(maxHeight, $$); }
 	| whilestatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| dowhilestatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
 	| switchstatement						{ $$ = 0; maxHeight = max(maxHeight, $$); }
@@ -138,11 +138,12 @@ functiondeclaration: type IDENTIFIER '(' argumentlist ')' ';'
 	| type IDENTIFIER '('')' ';'
 ;
 
-ifstatement: IF '(' expression ')' degenerableblock								{ numIfWithoutElse++; $$ = 0; maxHeight = max(maxHeight, $$); }
-	| IF '(' expression ')' degenerableblock ELSE nonifstatement				{ $$ = 1; maxHeight = max(maxHeight, $$); }		
-	| IF '(' expression ')' degenerableblock ELSE ifstatement					{ $$ = $7 + 1; maxHeight = max(maxHeight, $$); }
-	| IF '(' expression ')' degenerableblock ELSE block							{ $$ = $7 + 1; maxHeight = max(maxHeight, $$); }
+ifstatement: IF '(' expression ')' degenerableblock								{ numIfWithoutElse++; $$ = $5; maxHeight = max(maxHeight, $$); }
+	| IF '(' expression ')' degenerableblock ELSE nonifstatement				{ $$ = max(1,$5); maxHeight = max(maxHeight, $$); }		
+	| IF '(' expression ')' degenerableblock ELSE ifstatement					{ $$ = max($7 + 1,$5); maxHeight = max(maxHeight, $$); }
+	| IF '(' expression ')' degenerableblock ELSE block							{ $$ = max($7 + 1,$5); maxHeight = max(maxHeight, $$); }
 ;
+
 forstatement: FOR '(' expressionlist ';' expressionlist ';' expressionlist ')' degenerableblock
 	| FOR '(' expressionlist ';' expressionlist ';' ')' degenerableblock
 	| FOR '(' expressionlist ';' ';' expressionlist ')' degenerableblock

@@ -23,8 +23,8 @@ oneline: statement
 	| functiondefinition
 ;
 
-statements: statements statement
-	| statement
+statements: statements degenerableblock
+	| degenerableblock
 ;
 
 statement: ifstatement

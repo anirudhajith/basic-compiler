@@ -1,3 +1,4 @@
+
 int *var=6;
 struct mystruct *ms=&var;
 int auto, static, inline;
@@ -134,6 +135,10 @@ switch(grade) {
 	int a = -5 * &(6&7) * *p;
 	char* hello = "hello" "5 6";
 	//int a = 5 6;
+
+	{
+		int thisis = "a new scope";
+	}
 
 }
 

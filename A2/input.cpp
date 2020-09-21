@@ -1,15 +1,2 @@
 int d[10];
-int h;
-int foo(int c, int [] b) {
-    return b[c];
-}
-int main() {
-    int i;
-    i = 0;
-    if (i == 0)
-        i = i + 1;
-    while (i < 10) {
-        i = i + 1;
-    }
-    return foo(4, d);
-}
+int c[5];

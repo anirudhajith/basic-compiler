@@ -4,7 +4,9 @@
 	#include "y.tab.h"
 	void yyerror(char *);
 	extern int yylineno;
+	extern int mainDetected;
 	extern char mytext[];
+	char mainString[] = "main";
 %}
 
 %%
@@ -34,7 +36,7 @@ double                      { return DOUBLE; }
 void                        { return VOID; }
 char                        { return CHAR; }
 
-[a-zA-Z_][a-zA-Z_0-9]*      { return IDENTIFIER; }
+[a-zA-Z_][a-zA-Z_0-9]*      { mainDetected = strcmp(yytext, mainString); return IDENTIFIER; }
 
 \n							{ yylineno++; }
 \"\%d\"						{ return PERCENTD; }

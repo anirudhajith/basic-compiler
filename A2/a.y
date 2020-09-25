@@ -18,6 +18,7 @@
 	int yylex(void);
 	char mytext[100];
 	int mainDetected;
+	int updateMain = 0;
 	int programDiameter = 0;
 	int ifDiameter = 0;
 	int whileDiameter = 0;
@@ -101,7 +102,7 @@ extern_spec: EXTERN 													{ int h[1] = {0}; int d[1] = {0};			$$.h = getH
 	| epsilon															{ int h[1] = {0}; int d[1] = {0};			$$.h = getH(1, h); $$.d = getD(1, h, d); }
 ;
 
-fun_decl: type_spec identifier '(' params ')' compound_stmt				{ int h[6] = {$1.h, $2.h, 0, $4.h, 0, $6.h}; int d[6] = {$1.d, $2.d, 0, $4.d, 0, $6.d};			$$.h = getH(6, h); $$.d = getD(6, h, d); }
+fun_decl: type_spec identifier { if (mainDetected == 0) updateMain = 1; } '(' params ')' compound_stmt				{ int h[6] = {$1.h, $2.h, 0, $5.h, 0, $7.h}; int d[6] = {$1.d, $2.d, 0, $5.d, 0, $7.d};			$$.h = getH(6, h); $$.d = getD(6, h, d); 		if (updateMain == 1) {mainDiameter = max(mainDiameter, $$.d + 1); updateMain = 0;} }
 ;
 
 params: param_list														{ int h[1] = {$1.h}; int d[1] = {$1.d};			$$.h = getH(1, h); $$.d = getD(1, h, d); }

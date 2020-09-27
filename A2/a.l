@@ -7,6 +7,7 @@
 	extern int mainDetected;
 	extern char mytext[];
 	char mainString[] = "main";
+	extern int error;
 %}
 
 %%
@@ -58,6 +59,7 @@ char                        { return CHAR; }
 
 \/\/.*						;
 \/\*(.|\n)*\*\/				;
+"/*"([^*]|\*+[^*/])*		{ error = 2; printf("lexer error\n"); exit(error);}
 .							;
 %%
 

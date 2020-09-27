@@ -14,6 +14,7 @@
 %type <type_id> program decl_list decl struct_decl var_decl type_spec extern_spec fun_decl params param_list param stmt_list stmt expr_stmt while_stmt dowhile_stmt print_stmt format_specifier compound_stmt local_decls local_decl if_stmt return_stmt break_stmt continue_stmt switch_stmt compound_case single_case default_case assign_stmt incr_stmt decr_stmt expr Pexpr integerLit floatLit identifier arg_list args epsilon IF ELSE WHILE DO FOR SWITCH CASE DEFAULT EXTERN STRUCT BREAK CONTINUE RETURN SIZEOF PRINTF INT LONG SHORT FLOAT DOUBLE VOID CHAR IDENTIFIER CHARACTER NUMBER REALNUMBER STRING PERCENTD THREEWAYCOMP INCR DECR LOGICALAND LOGICALOR POINTERMEMBER EQEQ NOTEQ LESSEREQ GREATEREQ '!' '-' '+' '*' '&' '(' ')' '{' '}' '[' ']' ';' ':' '.'
 %{
 	#include <stdio.h>
+	#include <stdlib.h>
 	void yyerror(char *);
 	int yylex(void);
 	char mytext[100];
@@ -24,6 +25,7 @@
 	int whileDiameter = 0;
 	int switchDiameter = 0;
 	int mainDiameter = 0;
+	int error = 0;
 
 	int max(int a, int b) {
 		//printf("%d %d\n", a, b);
@@ -255,14 +257,18 @@ epsilon:																{ $$.h = 0; $$.d = 0; }
 %%
 
 void yyerror(char *s) {
-	extern int yylineno;
-    fprintf(stderr, "%s on line %d\n", s, yylineno);
+    printf("syntax error\n");
+	error = 1;
+	exit(error);
 }
+
 
 int main(void) {
     yyparse();
-	fprintf(stdout, "parsed successfully\n");
-	fprintf(stdout, "%d\n%d\n%d\n%d\n%d\n", programDiameter, ifDiameter, whileDiameter, switchDiameter, mainDiameter);
+	//fprintf(stdout, "parsed successfully\n");
+	if (error == 0) {
+		fprintf(stdout, "%d\n%d\n%d\n%d\n%d\n", programDiameter, ifDiameter, whileDiameter, switchDiameter, mainDiameter);
+	}
     return 0;
 }
 

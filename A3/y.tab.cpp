@@ -3091,7 +3091,7 @@ yyreturn:
 
 
 void yyerror(char* s) {
-    printf("***parsing terminated*** [syntax error]\n");
+    //printf("***parsing terminated*** [syntax error]\n");
     exit(0);
 }
 

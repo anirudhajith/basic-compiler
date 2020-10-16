@@ -886,7 +886,7 @@ case 4:
 YY_RULE_SETUP
 #line 45 "a.l"
 {
-    printf("***lexing terminated*** [lexer error]: ill-formed comment\n");
+    //printf("***lexing terminated*** [lexer error]: ill-formed comment\n");
     exit(0);
 }
 	YY_BREAK

@@ -638,12 +638,12 @@ static const yytype_uint16 yyrline[] =
      322,   328,   333,   339,   378,   382,   388,   393,   398,   402,
      408,   413,   419,   424,   429,   434,   439,   443,   447,   451,
      455,   459,   464,   469,   475,   494,   501,   515,   521,   528,
-     533,   539,   547,   553,   568,   588,   593,   599,   605,   611,
-     620,   624,   629,   635,   641,   650,   657,   665,   674,   682,
-     690,   707,   723,   739,   755,   763,   768,   784,   801,   807,
-     822,   828,   841,   854,   866,   880,   894,   904,   914,   920,
-     925,   930,   935,   940,   946,   952,   956,   962,   969,   976,
-     982,   988,   995,  1000,  1005,  1009
+     533,   539,   551,   557,   572,   592,   597,   603,   609,   615,
+     624,   628,   633,   639,   645,   654,   661,   669,   678,   686,
+     694,   711,   727,   743,   759,   767,   772,   788,   805,   811,
+     826,   832,   845,   858,   870,   884,   898,   908,   918,   924,
+     929,   934,   939,   944,   950,   956,   960,   966,   973,   980,
+     986,   992,   999,  1004,  1009,  1013
 };
 #endif
 
@@ -2128,25 +2128,29 @@ yyreduce:
                                             (yyvsp[0].node) = new treeNode(";");
                                             vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                             (yyval.node) = new treeNode("local_decl", v);
-                                            (yyval.node)->code = "   pushq $0\n";
-                                            symbolTable[(yyvsp[-1].node)->lexValue] = 8 * symbolTable.size() + 8;
+                                            int offset = 8 * symbolTable.size() + 8;
+                                            symbolTable[(yyvsp[-1].node)->lexValue] = offset;
+                                            (yyval.node)->code = 
+                                            "   pushq $0\n"
+                                            "   movq %rbp, %rsp\n"
+                                            "   subq $" + to_string(offset) + ", %rsp\n";
                                             //cout << $$->code << flush;
                                         }
-#line 2136 "y.tab.cpp" /* yacc.c:1646  */
+#line 2140 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 547 "a.y" /* yacc.c:1646  */
+#line 551 "a.y" /* yacc.c:1646  */
     {
                                                         (yyvsp[-3].node) = new treeNode("["); (yyvsp[-1].node) = new treeNode("]"); (yyvsp[0].node) = new treeNode(";");
                                                         vector<treeNode*> v = {(yyvsp[-5].node), (yyvsp[-4].node), (yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                                         (yyval.node) = new treeNode("local_decl", v); 
                                                     }
-#line 2146 "y.tab.cpp" /* yacc.c:1646  */
+#line 2150 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 553 "a.y" /* yacc.c:1646  */
+#line 557 "a.y" /* yacc.c:1646  */
     {   
                                     (yyvsp[-4].node) = new treeNode("IF");
                                     (yyvsp[-3].node) = new treeNode("("); (yyvsp[-1].node) = new treeNode(")");
@@ -2162,11 +2166,11 @@ yyreduce:
                                     (yyvsp[0].node)->code +
                                     l + ":\n";
                                 }
-#line 2166 "y.tab.cpp" /* yacc.c:1646  */
+#line 2170 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 568 "a.y" /* yacc.c:1646  */
+#line 572 "a.y" /* yacc.c:1646  */
     { 
                                             (yyvsp[-6].node) = new treeNode("IF");
                                             (yyvsp[-5].node) = new treeNode("("); (yyvsp[-3].node) = new treeNode(")"); (yyvsp[-1].node) = new treeNode("ELSE");
@@ -2186,51 +2190,51 @@ yyreduce:
                                             (yyvsp[0].node)->code + 
                                             l_end + ":\n";
                                         }
-#line 2190 "y.tab.cpp" /* yacc.c:1646  */
+#line 2194 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 588 "a.y" /* yacc.c:1646  */
+#line 592 "a.y" /* yacc.c:1646  */
     { 
                             (yyvsp[-1].node) = new treeNode("RETURN"); (yyvsp[0].node) = new treeNode(";");
                             vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                             (yyval.node) = new treeNode("return_stmt", v);
                         }
-#line 2200 "y.tab.cpp" /* yacc.c:1646  */
+#line 2204 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 593 "a.y" /* yacc.c:1646  */
+#line 597 "a.y" /* yacc.c:1646  */
     {
                                     (yyvsp[-2].node) = new treeNode("RETURN"); (yyvsp[0].node) = new treeNode(";");
                                     vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                     (yyval.node) = new treeNode("return_stmt", v);
                                 }
-#line 2210 "y.tab.cpp" /* yacc.c:1646  */
+#line 2214 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 599 "a.y" /* yacc.c:1646  */
+#line 603 "a.y" /* yacc.c:1646  */
     {
                             (yyvsp[-1].node) = new treeNode("BREAK"); (yyvsp[0].node) = new treeNode(";");
                             vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                             (yyval.node) = new treeNode("break_stmt", v);
                         }
-#line 2220 "y.tab.cpp" /* yacc.c:1646  */
+#line 2224 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 605 "a.y" /* yacc.c:1646  */
+#line 609 "a.y" /* yacc.c:1646  */
     {
                                 (yyvsp[-1].node) = new treeNode("CONTINUE"); (yyvsp[0].node) = new treeNode(";");
                                 vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                                 (yyval.node) = new treeNode("continue_stmt", v);
                             }
-#line 2230 "y.tab.cpp" /* yacc.c:1646  */
+#line 2234 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 611 "a.y" /* yacc.c:1646  */
+#line 615 "a.y" /* yacc.c:1646  */
     {
                                                                         (yyvsp[-7].node) = new treeNode("SWITCH");
                                                                         (yyvsp[-6].node) = new treeNode("("); (yyvsp[-4].node) = new treeNode(")");
@@ -2239,49 +2243,49 @@ yyreduce:
                                                                         (yyval.node) = new treeNode("switch_stmt", v);
                                                                         set_switchLongestPath((yyval.node)->maxSubtreeLength);    
                                                                     }
-#line 2243 "y.tab.cpp" /* yacc.c:1646  */
+#line 2247 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 620 "a.y" /* yacc.c:1646  */
+#line 624 "a.y" /* yacc.c:1646  */
     {
                                                 vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                                                 (yyval.node) = new treeNode("compound_case", v); 
                                             }
-#line 2252 "y.tab.cpp" /* yacc.c:1646  */
+#line 2256 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 624 "a.y" /* yacc.c:1646  */
+#line 628 "a.y" /* yacc.c:1646  */
     {
                                 vector<treeNode*> v = {(yyvsp[0].node)};
                                 (yyval.node) = new treeNode("compound_case", v);
                             }
-#line 2261 "y.tab.cpp" /* yacc.c:1646  */
+#line 2265 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 629 "a.y" /* yacc.c:1646  */
+#line 633 "a.y" /* yacc.c:1646  */
     {
                                                 (yyvsp[-3].node) = new treeNode("CASE"); (yyvsp[-1].node) = new treeNode(":");
                                                 vector<treeNode*> v = {(yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                                 (yyval.node) = new treeNode("single_case", v);
                                             }
-#line 2271 "y.tab.cpp" /* yacc.c:1646  */
+#line 2275 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 635 "a.y" /* yacc.c:1646  */
+#line 639 "a.y" /* yacc.c:1646  */
     {
                                         (yyvsp[-2].node) = new treeNode("DEFAULT"); (yyvsp[-1].node) = new treeNode(":");
                                         vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                         (yyval.node) = new treeNode("default_case", v);
                                     }
-#line 2281 "y.tab.cpp" /* yacc.c:1646  */
+#line 2285 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 641 "a.y" /* yacc.c:1646  */
+#line 645 "a.y" /* yacc.c:1646  */
     {
                                         vector<treeNode*> u = {(yyvsp[-3].node), (yyvsp[-1].node)};
                                         (yyvsp[-2].node) = new treeNode("EQ", u);
@@ -2291,11 +2295,11 @@ yyreduce:
                                         (yyval.node)->code = 	(yyvsp[-1].node)->code + 
 													"   popq -" + to_string(symbolTable[(yyvsp[-3].node)->lexValue]) + "(%rbp)\n";
                                     }
-#line 2295 "y.tab.cpp" /* yacc.c:1646  */
+#line 2299 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 650 "a.y" /* yacc.c:1646  */
+#line 654 "a.y" /* yacc.c:1646  */
     {   // check this one
                                                         (yyvsp[-5].node) = new treeNode("["); (yyvsp[-3].node) = new treeNode("]"); (yyvsp[0].node) = new treeNode(";");
                                                         vector<treeNode*> u = {(yyvsp[-6].node), (yyvsp[-5].node), (yyvsp[-4].node), (yyvsp[-3].node), (yyvsp[-1].node)};
@@ -2303,11 +2307,11 @@ yyreduce:
                                                         vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[0].node)};
                                                         (yyval.node) = new treeNode("assign_stmt", v);    
                                                     }
-#line 2307 "y.tab.cpp" /* yacc.c:1646  */
+#line 2311 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 657 "a.y" /* yacc.c:1646  */
+#line 661 "a.y" /* yacc.c:1646  */
     {
                                                             (yyvsp[0].node) = new treeNode(";");
                                                             (yyvsp[-4].node) = new treeNode("ARROW");
@@ -2316,11 +2320,11 @@ yyreduce:
                                                             vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[0].node)};
                                                             (yyval.node) = new treeNode("assign_stmt", v);
                                                         }
-#line 2320 "y.tab.cpp" /* yacc.c:1646  */
+#line 2324 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 665 "a.y" /* yacc.c:1646  */
+#line 669 "a.y" /* yacc.c:1646  */
     {
                                                         (yyvsp[0].node) = new treeNode(";");
                                                         (yyvsp[-4].node) = new treeNode(".");
@@ -2329,11 +2333,11 @@ yyreduce:
                                                         vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[0].node)};
                                                         (yyval.node) = new treeNode("assign_stmt", v);
                                                     }
-#line 2333 "y.tab.cpp" /* yacc.c:1646  */
+#line 2337 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 674 "a.y" /* yacc.c:1646  */
+#line 678 "a.y" /* yacc.c:1646  */
     {
                                     (yyvsp[0].node) = new treeNode(";");
                                     (yyvsp[-1].node) = new treeNode("INC");
@@ -2341,11 +2345,11 @@ yyreduce:
                                     (yyval.node) = new treeNode("incr_stmt", v);
                                     (yyval.node)->code = "   incq -" + to_string(symbolTable[(yyvsp[-2].node)->lexValue]) + "(%rbp)\n";
                                 }
-#line 2345 "y.tab.cpp" /* yacc.c:1646  */
+#line 2349 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 682 "a.y" /* yacc.c:1646  */
+#line 686 "a.y" /* yacc.c:1646  */
     {
                                     (yyvsp[0].node) = new treeNode(";");
                                     (yyvsp[-1].node) = new treeNode("DEC");
@@ -2353,11 +2357,11 @@ yyreduce:
                                     (yyval.node) = new treeNode("decr_stmt", v);
                                     (yyval.node)->code = "   decq -" + to_string(symbolTable[(yyvsp[-2].node)->lexValue]) + "(%rbp)\n";
                                 }
-#line 2357 "y.tab.cpp" /* yacc.c:1646  */
+#line 2361 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 690 "a.y" /* yacc.c:1646  */
+#line 694 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("LT", u);
@@ -2367,19 +2371,19 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code +
-                            "   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+                            "   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jnl " + l + "\n"
 							"   notq 0(%rsp)\n" + 
 							l + ":\n";
 
                         }
-#line 2379 "y.tab.cpp" /* yacc.c:1646  */
+#line 2383 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 707 "a.y" /* yacc.c:1646  */
+#line 711 "a.y" /* yacc.c:1646  */
     {   
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("GT", u);
@@ -2389,18 +2393,18 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jng " + l + "\n"
 							"   notq 0(%rsp)\n" + 
 							l + ":\n";
                         }
-#line 2400 "y.tab.cpp" /* yacc.c:1646  */
+#line 2404 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 723 "a.y" /* yacc.c:1646  */
+#line 727 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("LEQ", u);
@@ -2410,18 +2414,18 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jnle " + l + "\n"
 							"   notq 0(%rsp)\n" + 
 							l + ":\n";
                         }
-#line 2421 "y.tab.cpp" /* yacc.c:1646  */
+#line 2425 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 739 "a.y" /* yacc.c:1646  */
+#line 743 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("GEQ", u);
@@ -2431,18 +2435,18 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jnge " + l + "\n"
 							"   notq 0(%rsp)\n" + 
 							l + ":\n";
                         }
-#line 2442 "y.tab.cpp" /* yacc.c:1646  */
+#line 2446 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 755 "a.y" /* yacc.c:1646  */
+#line 759 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("OR", u);
@@ -2451,21 +2455,21 @@ yyreduce:
                             "   or 0(%rsp), 8(%rsp)\n"
 							"   popq %rax\n";
                         }
-#line 2455 "y.tab.cpp" /* yacc.c:1646  */
+#line 2459 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 763 "a.y" /* yacc.c:1646  */
+#line 767 "a.y" /* yacc.c:1646  */
     {
                                 (yyvsp[-3].node) = new treeNode("SIZEOF"); (yyvsp[-2].node) = new treeNode("("); (yyvsp[0].node) = new treeNode(")");
                                 vector<treeNode*> v = {(yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                 (yyval.node) = new treeNode("expr", v);
                             }
-#line 2465 "y.tab.cpp" /* yacc.c:1646  */
+#line 2469 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 768 "a.y" /* yacc.c:1646  */
+#line 772 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("EQEQ", u);
@@ -2475,18 +2479,18 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jne " + l + "\n"
 							"   notq 0(%rsp)\n" + 
 							l + ":\n";
                         }
-#line 2486 "y.tab.cpp" /* yacc.c:1646  */
+#line 2490 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 784 "a.y" /* yacc.c:1646  */
+#line 788 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("NEQ", u);
@@ -2496,30 +2500,30 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   je " + l + "\n"
 							"   notq 0(%rsp)\n" + 
 							l + ":\n";
 							
                         }
-#line 2508 "y.tab.cpp" /* yacc.c:1646  */
+#line 2512 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 801 "a.y" /* yacc.c:1646  */
+#line 805 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("NEWOP", u);
                             vector<treeNode*> v = {(yyvsp[-1].node)};
                             (yyval.node) = new treeNode("expr", v);	//TODO
                         }
-#line 2519 "y.tab.cpp" /* yacc.c:1646  */
+#line 2523 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 807 "a.y" /* yacc.c:1646  */
+#line 811 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("AND", u);
@@ -2535,22 +2539,22 @@ yyreduce:
 
 							
                         }
-#line 2539 "y.tab.cpp" /* yacc.c:1646  */
+#line 2543 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 822 "a.y" /* yacc.c:1646  */
+#line 826 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("ARROW", u);
                             vector<treeNode*> v = {(yyvsp[-1].node)};
                             (yyval.node) = new treeNode("expr", v);
                         }
-#line 2550 "y.tab.cpp" /* yacc.c:1646  */
+#line 2554 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 828 "a.y" /* yacc.c:1646  */
+#line 832 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("PLUS", u);
@@ -2564,11 +2568,11 @@ yyreduce:
 							"   addq %rax, %rbx\n"
 							"   pushq %rbx\n";
                         }
-#line 2568 "y.tab.cpp" /* yacc.c:1646  */
+#line 2572 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 841 "a.y" /* yacc.c:1646  */
+#line 845 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("MINUS", u);
@@ -2582,11 +2586,11 @@ yyreduce:
 							"   subq %rax, %rbx\n"
 							"   pushq %rbx\n";
                         }
-#line 2586 "y.tab.cpp" /* yacc.c:1646  */
+#line 2590 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 854 "a.y" /* yacc.c:1646  */
+#line 858 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("MULT", u);
@@ -2599,11 +2603,11 @@ yyreduce:
 							"   imulq 0(%rsp)\n"
 							"   mov %rax, 0(%rsp)\n";
                         }
-#line 2603 "y.tab.cpp" /* yacc.c:1646  */
+#line 2607 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 866 "a.y" /* yacc.c:1646  */
+#line 870 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("DIV", u);
@@ -2612,17 +2616,17 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code + 
-							"   mov 8(%rsp), %eax\n"
+                            "   popq %rbx\n"
+                            "   popq %rax\n"
                             "   cqto\n"
-							"   idivq 0(%rsp)\n"
-							"   mov %eax, 8(%rsp)\n"
-							"   popq %rax\n";
+							"   idivq %rbx\n"
+                            "   pushq %rax\n";
                         }
-#line 2622 "y.tab.cpp" /* yacc.c:1646  */
+#line 2626 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 880 "a.y" /* yacc.c:1646  */
+#line 884 "a.y" /* yacc.c:1646  */
     {
                             vector<treeNode*> u = {(yyvsp[-2].node), (yyvsp[0].node)};
                             (yyvsp[-1].node) = new treeNode("MOD", u);
@@ -2631,17 +2635,17 @@ yyreduce:
 							(yyval.node)->code = 
 							(yyvsp[-2].node)->code + 
 							(yyvsp[0].node)->code + 
-							"   mov 8(%rsp), %eax\n"
+							"   popq %rbx\n"
+                            "   popq %rax\n"
                             "   cqto\n"
-							"   idivq 0(%rsp)\n"
-							"   mov %edx, 8(%rsp)\n"
-							"   popq %rax\n";
+							"   idivq %rbx\n"
+                            "   pushq %rdx\n";
                         }
-#line 2641 "y.tab.cpp" /* yacc.c:1646  */
+#line 2645 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 894 "a.y" /* yacc.c:1646  */
+#line 898 "a.y" /* yacc.c:1646  */
     {
                     (yyvsp[-1].node) = new treeNode("NOT");
                     vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
@@ -2652,11 +2656,11 @@ yyreduce:
 					"   notq %rax\n"
                     "   pushq %rax\n";
                 }
-#line 2656 "y.tab.cpp" /* yacc.c:1646  */
+#line 2660 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 904 "a.y" /* yacc.c:1646  */
+#line 908 "a.y" /* yacc.c:1646  */
     {
                         (yyvsp[-1].node) = new treeNode("MINUS");
                         vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
@@ -2667,195 +2671,195 @@ yyreduce:
                         "   negq %rax\n"
                         "   pushq %rax\n";
                     }
-#line 2671 "y.tab.cpp" /* yacc.c:1646  */
+#line 2675 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 914 "a.y" /* yacc.c:1646  */
+#line 918 "a.y" /* yacc.c:1646  */
     {
                         (yyvsp[-1].node) = new treeNode("PLUS");
                         vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                         (yyval.node) = new treeNode("expr", v);
 						(yyval.node)->code = (yyvsp[0].node)->code;
                     }
-#line 2682 "y.tab.cpp" /* yacc.c:1646  */
+#line 2686 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 920 "a.y" /* yacc.c:1646  */
+#line 924 "a.y" /* yacc.c:1646  */
     {
                         (yyvsp[-1].node) = new treeNode("MULT");
                         vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                         (yyval.node) = new treeNode("expr", v);
                     }
-#line 2692 "y.tab.cpp" /* yacc.c:1646  */
+#line 2696 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 925 "a.y" /* yacc.c:1646  */
+#line 929 "a.y" /* yacc.c:1646  */
     {   
                         (yyvsp[-1].node) = new treeNode("BITAND");
                         vector<treeNode*> v = {(yyvsp[-1].node), (yyvsp[0].node)};
                         (yyval.node) = new treeNode("expr", v);
                     }
-#line 2702 "y.tab.cpp" /* yacc.c:1646  */
+#line 2706 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 930 "a.y" /* yacc.c:1646  */
+#line 934 "a.y" /* yacc.c:1646  */
     {
                 vector<treeNode*> v = {(yyvsp[0].node)};
                 (yyval.node) = new treeNode("expr", v);
 				(yyval.node)->code = (yyvsp[0].node)->code;
             }
-#line 2712 "y.tab.cpp" /* yacc.c:1646  */
+#line 2716 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 935 "a.y" /* yacc.c:1646  */
+#line 939 "a.y" /* yacc.c:1646  */
     {
                                     (yyvsp[-2].node) = new treeNode("("); (yyvsp[0].node) = new treeNode(")");
                                     vector<treeNode*> v = {(yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                     (yyval.node) = new treeNode("expr", v); 
                                 }
-#line 2722 "y.tab.cpp" /* yacc.c:1646  */
+#line 2726 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 940 "a.y" /* yacc.c:1646  */
+#line 944 "a.y" /* yacc.c:1646  */
     {
                                     (yyvsp[-2].node) = new treeNode("["); (yyvsp[0].node) = new treeNode("]");
                                     vector<treeNode*> v = {(yyvsp[-3].node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                     (yyval.node) = new treeNode("expr", v); 
                                 }
-#line 2732 "y.tab.cpp" /* yacc.c:1646  */
+#line 2736 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 946 "a.y" /* yacc.c:1646  */
+#line 950 "a.y" /* yacc.c:1646  */
     {
                         vector<treeNode*> v = {(yyvsp[0].node)};
                         (yyval.node) = new treeNode("Pexpr", v);
 						(yyval.node)->code = 
 						"   pushq $" + (yyvsp[0].node)->lexValue + "\n";
                     }
-#line 2743 "y.tab.cpp" /* yacc.c:1646  */
+#line 2747 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 952 "a.y" /* yacc.c:1646  */
+#line 956 "a.y" /* yacc.c:1646  */
     {
                     vector<treeNode*> v = {(yyvsp[0].node)};
                     (yyval.node) = new treeNode("Pexpr", v);
                 }
-#line 2752 "y.tab.cpp" /* yacc.c:1646  */
+#line 2756 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 956 "a.y" /* yacc.c:1646  */
+#line 960 "a.y" /* yacc.c:1646  */
     {
                         vector<treeNode*> v = {(yyvsp[0].node)};
                         (yyval.node) = new treeNode("Pexpr", v);
                         (yyval.node)->code = 
 						"   pushq -" + to_string(symbolTable[(yyvsp[0].node)->lexValue]) + "(%rbp)\n";
                     }
-#line 2763 "y.tab.cpp" /* yacc.c:1646  */
+#line 2767 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 962 "a.y" /* yacc.c:1646  */
+#line 966 "a.y" /* yacc.c:1646  */
     {
                         (yyvsp[-2].node) = new treeNode("("); (yyvsp[0].node) = new treeNode(")");
                         vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                         (yyval.node) = new treeNode("Pexpr", v);
                         (yyval.node)->code = (yyvsp[-1].node)->code;
                     }
-#line 2774 "y.tab.cpp" /* yacc.c:1646  */
+#line 2778 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 969 "a.y" /* yacc.c:1646  */
+#line 973 "a.y" /* yacc.c:1646  */
     {
                                 (yyvsp[0].node) = new treeNode("INTEGER_NUMBER");
                                 vector<treeNode*> v = {(yyvsp[0].node)};
                                 (yyval.node) = new treeNode("intergerLit", v);
 								(yyval.node)->lexValue = mytext;
                             }
-#line 2785 "y.tab.cpp" /* yacc.c:1646  */
+#line 2789 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 976 "a.y" /* yacc.c:1646  */
+#line 980 "a.y" /* yacc.c:1646  */
     {
                             (yyvsp[0].node) = new treeNode("FLOAT_NUMBER");
                             vector<treeNode*> v = {(yyvsp[0].node)};
                             (yyval.node) = new treeNode("floatLit", v);
                         }
-#line 2795 "y.tab.cpp" /* yacc.c:1646  */
+#line 2799 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 982 "a.y" /* yacc.c:1646  */
+#line 986 "a.y" /* yacc.c:1646  */
     {
                             (yyvsp[0].node) = new treeNode("IDENTIFIER");
                             vector<treeNode*> v = {(yyvsp[0].node)};
                             (yyval.node) = new treeNode("identifier", v);
                             (yyval.node)->lexValue = mytext;
                         }
-#line 2806 "y.tab.cpp" /* yacc.c:1646  */
+#line 2810 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 988 "a.y" /* yacc.c:1646  */
+#line 992 "a.y" /* yacc.c:1646  */
     {
                         (yyvsp[0].node) = new treeNode("IDENTIFIER");
                         vector<treeNode*> v = {(yyvsp[0].node)};
                         (yyval.node) = new treeNode("identifier", v);
                         (yyval.node)->lexValue = "printf";
                     }
-#line 2817 "y.tab.cpp" /* yacc.c:1646  */
+#line 2821 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 995 "a.y" /* yacc.c:1646  */
+#line 999 "a.y" /* yacc.c:1646  */
     {
                                 (yyvsp[-1].node) = new treeNode(",");
                                 vector<treeNode*> v = {(yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node)};
                                 (yyval.node) = new treeNode("arg_list", v);
                             }
-#line 2827 "y.tab.cpp" /* yacc.c:1646  */
+#line 2831 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 1000 "a.y" /* yacc.c:1646  */
+#line 1004 "a.y" /* yacc.c:1646  */
     {
                     vector<treeNode*> v = {(yyvsp[0].node)};
                     (yyval.node) = new treeNode("arg_list", v);
                 }
-#line 2836 "y.tab.cpp" /* yacc.c:1646  */
+#line 2840 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 1005 "a.y" /* yacc.c:1646  */
+#line 1009 "a.y" /* yacc.c:1646  */
     {
                     vector<treeNode*> v = {(yyvsp[0].node)};
                     (yyval.node) = new treeNode("args", v);
                 }
-#line 2845 "y.tab.cpp" /* yacc.c:1646  */
+#line 2849 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 1009 "a.y" /* yacc.c:1646  */
+#line 1013 "a.y" /* yacc.c:1646  */
     {
             auto x = new treeNode("epsilon");
             vector<treeNode*> v = {x};
             (yyval.node) = new treeNode("args", v);
         }
-#line 2855 "y.tab.cpp" /* yacc.c:1646  */
+#line 2859 "y.tab.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 2859 "y.tab.cpp" /* yacc.c:1646  */
+#line 2863 "y.tab.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3083,7 +3087,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1015 "a.y" /* yacc.c:1906  */
+#line 1019 "a.y" /* yacc.c:1906  */
 
 
 void yyerror(char* s) {

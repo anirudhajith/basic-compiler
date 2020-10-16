@@ -540,8 +540,12 @@ local_decl: type_spec identifier ';'    {
                                             $3 = new treeNode(";");
                                             vector<treeNode*> v = {$1, $2, $3};
                                             $$ = new treeNode("local_decl", v);
-                                            $$->code = "   pushq $0\n";
-                                            symbolTable[$2->lexValue] = 8 * symbolTable.size() + 8;
+                                            int offset = 8 * symbolTable.size() + 8;
+                                            symbolTable[$2->lexValue] = offset;
+                                            $$->code = 
+                                            "   pushq $0\n"
+                                            "   movq %rbp, %rsp\n"
+                                            "   subq $" + to_string(offset) + ", %rsp\n";
                                             //cout << $$->code << flush;
                                         }
           | type_spec identifier '[' expr ']' ';'   {
@@ -696,8 +700,8 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code +
-                            "   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+                            "   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jnl " + l + "\n"
 							"   notq 0(%rsp)\n" + 
@@ -713,8 +717,8 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jng " + l + "\n"
 							"   notq 0(%rsp)\n" + 
@@ -729,8 +733,8 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jnle " + l + "\n"
 							"   notq 0(%rsp)\n" + 
@@ -745,8 +749,8 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jnge " + l + "\n"
 							"   notq 0(%rsp)\n" + 
@@ -774,8 +778,8 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   jne " + l + "\n"
 							"   notq 0(%rsp)\n" + 
@@ -790,8 +794,8 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code +
-							"   movq 0(%rsp), %rax\n"
-							"   cmp %rax, 8(%rsp)\n"
+							"   popq %rax\n"
+							"   cmp %rax, 0(%rsp)\n"
 							"   movq $0, 0(%rsp)\n"
 							"   je " + l + "\n"
 							"   notq 0(%rsp)\n" + 
@@ -871,11 +875,11 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code + 
-							"   mov 8(%rsp), %eax\n"
+                            "   popq %rbx\n"
+                            "   popq %rax\n"
                             "   cqto\n"
-							"   idivq 0(%rsp)\n"
-							"   mov %eax, 8(%rsp)\n"
-							"   popq %rax\n";
+							"   idivq %rbx\n"
+                            "   pushq %rax\n";
                         }
     | Pexpr MOD Pexpr   {
                             vector<treeNode*> u = {$1, $3};
@@ -885,11 +889,11 @@ expr: Pexpr LT Pexpr    {
 							$$->code = 
 							$1->code + 
 							$3->code + 
-							"   mov 8(%rsp), %eax\n"
+							"   popq %rbx\n"
+                            "   popq %rax\n"
                             "   cqto\n"
-							"   idivq 0(%rsp)\n"
-							"   mov %edx, 8(%rsp)\n"
-							"   popq %rax\n";
+							"   idivq %rbx\n"
+                            "   pushq %rdx\n";
                         }
     | NOT Pexpr {
                     $1 = new treeNode("NOT");

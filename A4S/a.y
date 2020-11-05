@@ -12,6 +12,7 @@
     void set_whileLongestPath(int);   // Set Longest Path among all subtrees of while statement
     void set_mainLongestPath(int);    // Set Longest Path of main subtee
     void set_switchLongestPath(int);  // Set Longest Path among all subtrees of switch statement
+    void remove_unused_vars(treeNode*); // Delete unused var declarations from the ast  
     extern FILE* yyin;
     char mytext[10000];
     int programLongestPath = 0;
@@ -22,6 +23,7 @@
     int isMain = 0;  
     extern char* yytext;
     treeNode* ast;   // pointer to the root of the final abstract syntax tree   
+    stack<string> unused_vars;
 %}
 
 %union {
@@ -748,8 +750,49 @@ void set_mainLongestPath(int x) {
      mainLongestPath = max(mainLongestPath, x);
 }
 
+void remove_unused_vars(treeNode* root) {
+    if (root->nodeName == "compound_stmt") {
+        treeNode* declarations = root->children[1];
+        treeNode* statements = root->children[2];
+
+        set<string> variablesUsed;
+        stack<treeNode*> S;
+        
+        S.push(statements);
+        while(!S.empty()) {
+            treeNode* top = S.top(); S.pop();
+            if(top->nodeName == "identifier") 
+                variablesUsed.insert(top->lexValue);
+            for(treeNode* c: top->children) {
+                S.push(c);
+            }
+        }
+
+        while(declarations->children[0]->nodeName != "epsilon") {
+            string variableDeclared = declarations->children[1]->children[1]->lexValue;
+            if(variablesUsed.count(variableDeclared) == 0) {
+                unused_vars.push(variableDeclared);
+                *declarations = *(declarations->children[0]);
+            } else {
+                declarations = declarations->children[0];
+            }
+        }
+    } else {
+        for(treeNode* c: root->children) {
+            remove_unused_vars(c);
+        }
+    }
+}
+
 int main() {
     yyparse();
+    remove_unused_vars(ast);
+    /*
+    while(!unused_vars.empty()) {
+        cout << unused_vars.top() << " "; unused_vars.pop();
+    }
+    cout << endl;
+    */
     // printf("***parsing successful***\n");
     // printf("%d\n", programLongestPath);
     // printf("%d\n", ifLongestPath);

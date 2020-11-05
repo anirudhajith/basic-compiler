@@ -452,7 +452,7 @@ void traverseAST(treeNode* root) {
 }
 
 int generateIR() {
-    // printAST(ast, "", true);
+    //printAST(ast, "", true);
     IR.open("a.ir");
     traverseAST(ast);
     // cout << "-----------3AC---------" << endl;

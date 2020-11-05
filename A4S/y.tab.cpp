@@ -2870,17 +2870,17 @@ void constants_and_if_simple(treeNode *ast) {
 
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
-        cout << top->nodeName << endl;
+        //cout << top->nodeName << endl;
 
         if(top->nodeName == "local_decl") 
             variableValues[top->children[1]->lexValue] = 0;
         else if (top->nodeName == "assign_stmt") {
-            cout << "Entered" << endl;
-            for(auto c: top->children[0]->children) cout << c->nodeName << " "; cout << endl;
+            //cout << "Entered" << endl;
+            //for(auto c: top->children[0]->children) cout << c->nodeName << " "; cout << endl;
             staticCalc(top->children[0]->children[1], variableValues);
-            cout << "Staticed" << endl;
+            //cout << "Staticed" << endl;
             simplifyExpr(top->children[0]->children[1]);
-            cout << "Simplified" << endl;
+            //cout << "Simplified" << endl;
             if (top->children[0]->children[1]->staticexpr) {
                 variableValues[top->children[0]->children[0]->lexValue] = top->children[0]->children[1]->exprval;
             } else {
@@ -2918,7 +2918,7 @@ void constants_and_if_simple(treeNode *ast) {
 
 
 void staticCalc(treeNode *expr, map<string, int> &variableValues) {
-    cout << expr->nodeName << endl;
+    //cout << expr->nodeName << endl;
     if (expr->nodeName == "Pexpr") {
         if (expr->children[0]->nodeName == "intergerLit") {                             // integerLit
             expr->staticexpr = true;
@@ -2986,7 +2986,7 @@ void staticCalc(treeNode *expr, map<string, int> &variableValues) {
             expr->exprval = expr->children[0]->exprval;
         }
     }
-    cout << expr->staticexpr << " " << expr->exprval << endl;
+    //cout << expr->staticexpr << " " << expr->exprval << endl;
 }
 
 treeNode* makeIntegerLitexpr(int n, bool P) {
@@ -3016,7 +3016,7 @@ void simplifyExpr(treeNode *expr) {
     S.push(expr);
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
-        cout << top->nodeName << endl;
+        //cout << top->nodeName << endl;
         if (top->staticexpr) {
             *top = *makeIntegerLitexpr(top->exprval, (top->nodeName == "Pexpr"));
         } else {

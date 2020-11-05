@@ -1,21 +1,7 @@
 main:
-$t1 = 2 PLUS 3
-$t2 = 7 MINUS 2
-$t3 = 3 PLUS $t2
-$t4 = $t1 MULT $t3
-a_main_1 = $t4
-$t5 = b_main_1 PLUS 5
-$t6 = 2 PLUS 3
-$t7 = $t5 MULT $t6
-b_main_1 = $t7
-$t8 = a_main_1 GT 10
-ifFalse $t8 goto .L1
-$t9 = b_main_1 PLUS 10
-b_main_1 = $t9
+a_main_1 = 40
+b_main_1 = 25
+b_main_1 = 35
 printf b_main_1
-goto .L2
-.L1:
-printf b_main_1
-.L2:
 return 0
 end

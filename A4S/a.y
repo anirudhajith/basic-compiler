@@ -13,6 +13,12 @@
     void set_mainLongestPath(int);    // Set Longest Path of main subtee
     void set_switchLongestPath(int);  // Set Longest Path among all subtrees of switch statement
     void remove_unused_vars(treeNode*); // Delete unused var declarations from the ast  
+    void constants_and_if_simple(treeNode*);    // perform constant propagation, constant folding and static if simplification
+    void staticCalc(treeNode *expr, map<string, int> &variableValues);
+    treeNode* makeIntegerLitexpr(int n, bool P);
+    void simplifyExpr(treeNode *expr);
+    treeNode* placeholder_stmt();
+
     extern FILE* yyin;
     char mytext[10000];
     int programLongestPath = 0;
@@ -784,6 +790,177 @@ void remove_unused_vars(treeNode* root) {
     }
 }
 
+void constants_and_if_simple(treeNode *ast) {
+    map<string, int> variableValues;
+
+    stack<treeNode*> S;   
+    S.push(ast);
+
+    while(!S.empty()) {
+        treeNode* top = S.top(); S.pop();
+        cout << top->nodeName << endl;
+
+        if(top->nodeName == "local_decl") 
+            variableValues[top->children[1]->lexValue] = 0;
+        else if (top->nodeName == "assign_stmt") {
+            cout << "Entered" << endl;
+            for(auto c: top->children[0]->children) cout << c->nodeName << " "; cout << endl;
+            staticCalc(top->children[0]->children[1], variableValues);
+            cout << "Staticed" << endl;
+            simplifyExpr(top->children[0]->children[1]);
+            cout << "Simplified" << endl;
+            if (top->children[0]->children[1]->staticexpr) {
+                variableValues[top->children[0]->children[0]->lexValue] = top->children[0]->children[1]->exprval;
+            } else {
+                variableValues.erase(top->children[0]->children[0]->lexValue);
+            }
+        } else if (top->nodeName == "stmt" && top->children[0]->nodeName == "if_stmt") {
+            treeNode* condition = top->children[0]->children[2];
+            staticCalc(condition, variableValues);
+            simplifyExpr(condition);
+            if (condition->staticexpr) {
+                if(condition->exprval) {
+                    *top = *(top->children[0]->children[4]);
+                } else {
+                    if (top->children[0]->children.size() == 7) {
+                        *top = *(top->children[0]->children[6]);
+                    } else {
+                        top->children[0] = placeholder_stmt();
+                    }
+                }
+            }
+            for(int i = top->children.size()-1; i >= 0; i--) {
+                S.push(top->children[i]);
+            }
+        } else if (top->nodeName == "return_stmt") {
+            staticCalc(top->children[1], variableValues);
+            simplifyExpr(top->children[1]);
+        } else {
+            for(int i = top->children.size()-1; i >= 0; i--) {
+                S.push(top->children[i]);
+            }
+        }
+    }
+
+}
+
+
+void staticCalc(treeNode *expr, map<string, int> &variableValues) {
+    cout << expr->nodeName << endl;
+    if (expr->nodeName == "Pexpr") {
+        if (expr->children[0]->nodeName == "intergerLit") {                             // integerLit
+            expr->staticexpr = true;
+            expr->exprval = stoi(expr->children[0]->lexValue);
+        } else if (expr->children[0]->nodeName == "identifier") {                       // identifier
+            string varName = expr->children[0]->lexValue;
+            if (variableValues.count(varName) > 0) {
+                expr->staticexpr = true;
+                expr->exprval = variableValues[varName];
+            }
+        } else if (expr->children[1]->nodeName == "expr") {                             // '(' expr ')'
+            staticCalc(expr->children[1], variableValues);
+            expr->staticexpr = expr->children[1]->staticexpr;
+            expr->exprval = expr->children[1]->exprval;
+        }
+    } else if (expr->nodeName == "expr") {
+        if (expr->children.size() == 1 && expr->children[0]->nodeName != "Pexpr") {
+            staticCalc(expr->children[0]->children[0], variableValues);
+            staticCalc(expr->children[0]->children[1], variableValues);
+            expr->staticexpr = expr->children[0]->children[0]->staticexpr && expr->children[0]->children[1]->staticexpr;
+            if (expr->staticexpr) {
+                if (expr->children[0]->nodeName == "LT") {
+                    expr->exprval = expr->children[0]->children[0]->exprval < expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "GT") {
+                    expr->exprval = expr->children[0]->children[0]->exprval > expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "LEQ") {
+                    expr->exprval = expr->children[0]->children[0]->exprval <= expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "GEQ") {
+                    expr->exprval = expr->children[0]->children[0]->exprval >= expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "OR") {
+                    expr->exprval = expr->children[0]->children[0]->exprval || expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "EQEQ") {
+                    expr->exprval = expr->children[0]->children[0]->exprval == expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "NEQ") {
+                    expr->exprval = expr->children[0]->children[0]->exprval != expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "AND") {
+                    expr->exprval = expr->children[0]->children[0]->exprval && expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "PLUS") {
+                    expr->exprval = expr->children[0]->children[0]->exprval + expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "MINUS") {
+                    expr->exprval = expr->children[0]->children[0]->exprval - expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "MULT") {
+                    expr->exprval = expr->children[0]->children[0]->exprval * expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "DIV") {
+                    expr->exprval = expr->children[0]->children[0]->exprval / expr->children[0]->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "MOD") {
+                    expr->exprval = expr->children[0]->children[0]->exprval % expr->children[0]->children[1]->exprval;
+                }
+            }
+        } else if (expr->children.size() == 2) {
+            staticCalc(expr->children[1], variableValues);
+            expr->staticexpr = expr->children[1]->staticexpr;
+            if (expr->staticexpr) {
+                if (expr->children[0]->nodeName == "NOT") {
+                    expr->exprval = !expr->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "MINUS") {
+                    expr->exprval = - expr->children[1]->exprval;
+                } else if (expr->children[0]->nodeName == "PLUS") {
+                    expr->exprval = expr->children[1]->exprval;
+                }
+            }
+        } else if (expr->children.size() == 1) {
+            staticCalc(expr->children[0], variableValues);
+            expr->staticexpr = expr->children[0]->staticexpr;
+            expr->exprval = expr->children[0]->exprval;
+        }
+    }
+    cout << expr->staticexpr << " " << expr->exprval << endl;
+}
+
+treeNode* makeIntegerLitexpr(int n, bool P) {
+    treeNode* base = new treeNode("INTEGER_NUMBER");
+    vector<treeNode*> v = {base};
+    treeNode* iL = new treeNode("intergerLit", v);
+    iL->staticexpr = true;
+    iL->exprval = n;
+    iL->lexValue = to_string(n);
+    iL->width = 4;
+    v = {iL};
+    treeNode* p = new treeNode("Pexpr", v);
+    p->staticexpr = true;
+    p->exprval = n;
+    if(P) return p;
+    else {
+        v = {p};
+        treeNode* e = new treeNode("expr", v);
+        e->staticexpr = true;
+        e->exprval = n;
+        return e;
+    }
+}
+
+void simplifyExpr(treeNode *expr) {
+    stack<treeNode*> S;   
+    S.push(expr);
+    while(!S.empty()) {
+        treeNode* top = S.top(); S.pop();
+        cout << top->nodeName << endl;
+        if (top->staticexpr) {
+            *top = *makeIntegerLitexpr(top->exprval, (top->nodeName == "Pexpr"));
+        } else {
+            for(treeNode* c: top->children) {
+                S.push(c);
+            }
+        }
+    }
+}
+
+treeNode* placeholder_stmt() {
+    auto a1 = new treeNode("CONTINUE"); auto a2 = new treeNode(";");
+    vector<treeNode*> v = {a1, a2};
+    return new treeNode("continue_stmt", v);
+}
+
 int main() {
     yyparse();
     remove_unused_vars(ast);
@@ -793,6 +970,11 @@ int main() {
     }
     cout << endl;
     */
+    constants_and_if_simple(ast);
+
+
+
+
     // printf("***parsing successful***\n");
     // printf("%d\n", programLongestPath);
     // printf("%d\n", ifLongestPath);

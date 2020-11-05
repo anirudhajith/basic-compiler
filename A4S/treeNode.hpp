@@ -12,6 +12,8 @@ class treeNode {
         int maxDirectLength;          // maximum path length ending at this node
         string nodeName;              // name of the node
         int level;                    // for printing
+        bool staticexpr;              // is this expression statically evaluatable
+        int exprval;                  // static expression value
 
         /*****************
          * START IR FIELDS
@@ -61,6 +63,8 @@ class treeNode {
             depth = 0;
             offset = 0;
             isArg = false;
+            staticexpr = false;
+            exprval = 0;
             compute();
         }
         treeNode(string nodeName) {     // for epsilon and terminals, no need to call compute

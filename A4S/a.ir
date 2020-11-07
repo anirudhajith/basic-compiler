@@ -1,7 +1,20 @@
 main:
-a_main_1 = 40
-b_main_1 = 25
-b_main_1 = 35
-printf b_main_1
+scanf a_main_1
+scanf b_main_1
+scanf c_main_1
+scanf d_main_1
+scanf e_main_1
+f_main_1 = 10
+h_main_1 = 2
+i_main_1 = 6
+g_main_1 = a_main_1
+$t1 = a_main_1 MULT f_main_1
+a_main_1 = $t1
+h_main_1 = 52
+i_main_1 = 56
+i_main_1 = 60
+printf g_main_1
+printf h_main_1
+printf i_main_1
 return 0
 end

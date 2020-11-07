@@ -81,21 +81,23 @@ extern int yydebug;
     SHORT = 291,
     DOUBLE = 292,
     PRINTF = 293,
-    PERCENTD = 294,
-    VOID = 295,
-    SWITCH = 296,
-    CASE = 297,
-    STRUCT = 298,
-    BREAK = 299,
-    CONTINUE = 300,
-    RETURN = 301,
-    STRLITERAL = 302,
-    CHARLITERAL = 303,
-    INC = 304,
-    DEC = 305,
-    ARROW = 306,
-    SIZEOF = 307,
-    DEFAULT = 308
+    SCANF = 294,
+    PERCENTD = 295,
+    PERCENTD2 = 296,
+    VOID = 297,
+    SWITCH = 298,
+    CASE = 299,
+    STRUCT = 300,
+    BREAK = 301,
+    CONTINUE = 302,
+    RETURN = 303,
+    STRLITERAL = 304,
+    CHARLITERAL = 305,
+    INC = 306,
+    DEC = 307,
+    ARROW = 308,
+    SIZEOF = 309,
+    DEFAULT = 310
   };
 #endif
 /* Tokens.  */
@@ -135,21 +137,23 @@ extern int yydebug;
 #define SHORT 291
 #define DOUBLE 292
 #define PRINTF 293
-#define PERCENTD 294
-#define VOID 295
-#define SWITCH 296
-#define CASE 297
-#define STRUCT 298
-#define BREAK 299
-#define CONTINUE 300
-#define RETURN 301
-#define STRLITERAL 302
-#define CHARLITERAL 303
-#define INC 304
-#define DEC 305
-#define ARROW 306
-#define SIZEOF 307
-#define DEFAULT 308
+#define SCANF 294
+#define PERCENTD 295
+#define PERCENTD2 296
+#define VOID 297
+#define SWITCH 298
+#define CASE 299
+#define STRUCT 300
+#define BREAK 301
+#define CONTINUE 302
+#define RETURN 303
+#define STRLITERAL 304
+#define CHARLITERAL 305
+#define INC 306
+#define DEC 307
+#define ARROW 308
+#define SIZEOF 309
+#define DEFAULT 310
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -160,7 +164,7 @@ union YYSTYPE
 
     class treeNode* node;
 
-#line 164 "y.tab.hpp" /* yacc.c:1909  */
+#line 168 "y.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

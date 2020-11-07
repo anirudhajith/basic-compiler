@@ -6,7 +6,7 @@ int main() {
     int e;
     a = (2 + 3) * (3 + (7 - 2));
 
-    //scanf("%d", &b);
+    scanf("%d", &b);
     b = (b + 5) * (2 + 3);
 
     if(a > 10) {

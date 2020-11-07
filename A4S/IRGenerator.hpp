@@ -200,6 +200,14 @@ void traverseAST(treeNode* root) {
         string arg = env.get(root->children[4]->lexValue);
         IR << "printf" << " " << arg << endl;
     }
+    else if(name == "scan_stmt") {
+        // cout << "I am at " << name << endl;
+        for(auto& child : root->children) {
+            traverseAST(child);
+        }
+        string arg = env.get(root->children[4]->lexValue);
+        IR << "scanf" << " " << arg << endl;
+    }
     else if(name == "if_stmt") {
     //    cout << "I am at " << name << endl;
         if(root->children.size() == 5) {   // if but no else

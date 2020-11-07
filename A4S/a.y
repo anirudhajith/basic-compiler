@@ -1,5 +1,5 @@
 %token IDENTIFIER INTEGER_NUMBER FLOAT_NUMBER PLUS MINUS MULT DIV IF ELSE FOR WHILE DO INT FLOAT CHAR EQ EQEQ GEQ LEQ GT LT
-%token NEWOP NEQ BITAND BITOR BITNOT BITXOR AND OR NOT MOD EXTERN LONG SHORT DOUBLE PRINTF PERCENTD
+%token NEWOP NEQ BITAND BITOR BITNOT BITXOR AND OR NOT MOD EXTERN LONG SHORT DOUBLE PRINTF SCANF PERCENTD PERCENTD2
 %token VOID SWITCH CASE STRUCT BREAK CONTINUE RETURN STRLITERAL CHARLITERAL INC DEC ARROW SIZEOF DEFAULT
 %{
     #include <bits/stdc++.h>
@@ -69,7 +69,9 @@
 %type <node> while_stmt
 %type <node> dowhile_stmt
 %type <node> print_stmt
+%type <node> scan_stmt
 %type <node> format_specifier
+%type <node> format_specifier2
 %type <node> compound_stmt
 %type <node> local_decls
 %type <node> local_decl
@@ -96,7 +98,9 @@
 %type <node> INTEGER_NUMBER
 %type <node> FLOAT_NUMBER
 %type <node> PRINTF
+%type <node> SCANF
 %type <node> PERCENTD
+%type <node> PERCENTD2
 %type <node> PLUS
 %type <node> MINUS
 %type <node> MULT
@@ -365,6 +369,10 @@ stmt: assign_stmt   {
                         vector<treeNode*> v = {$1};
                         $$ = new treeNode("stmt", v);
                     }
+    | scan_stmt    {
+                        vector<treeNode*> v = {$1};
+                        $$ = new treeNode("stmt", v);
+                    }
     | incr_stmt {
                     vector<treeNode*> v = {$1};
                     $$ = new treeNode("stmt", v);
@@ -394,12 +402,24 @@ print_stmt: PRINTF '(' format_specifier ',' identifier ')' ';'  {
                                                                     $6 = new treeNode(")"); $7 = new treeNode(";");
                                                                     vector<treeNode*> v = {$1, $2, $3, $4, $5, $6, $7};
                                                                     $$ = new treeNode("print_stmt", v); 
+                                                                    $$->line = line;
+                                                                };
+scan_stmt: SCANF '(' format_specifier2 ',' BITAND identifier ')' ';'  {
+                                                                    $1 = new treeNode("SCANF"); $2 = new treeNode("("); $4 = new treeNode(",");
+                                                                    $7 = new treeNode(")"); $8 = new treeNode(";");
+                                                                    vector<treeNode*> v = {$1, $2, $3, $4, $6, $7, $8};
+                                                                    $$ = new treeNode("scan_stmt", v); 
                                                                 };
 
 format_specifier: PERCENTD  {
                                 $1 = new treeNode("PERCENTD");
                                 vector<treeNode*> v = {$1};
                                 $$ = new treeNode("format_specifier", v);
+                            };
+format_specifier2: PERCENTD2  {
+                                $1 = new treeNode("PERCENTD2");
+                                vector<treeNode*> v = {$1};
+                                $$ = new treeNode("format_specifier2", v);
                             };
 
 compound_stmt: '{' local_decls stmt_list '}'    {
@@ -625,7 +645,6 @@ expr: Pexpr LT Pexpr    {
                             $2 = new treeNode("MULT", u, line);
                             vector<treeNode*> v = {$2};
                             $$ = new treeNode("expr", v, line);
-                            cout << "LLLL" << line << endl;
                         }
     | Pexpr DIV Pexpr   {
                             vector<treeNode*> u = {$1, $3};
@@ -828,6 +847,14 @@ void constants_and_if_simple(treeNode *ast) {
             } else {
                 variableValues.erase(top->children[0]->children[0]->lexValue);
             }
+        } else if (top->nodeName == "scan_stmt") {
+            string varName = top->children[4]->lexValue;
+            variableValues.erase(varName);
+        } else if (top->nodeName == "print_stmt") {
+            string varName = top->children[4]->lexValue;
+            if (variableValues.count(varName) > 0) {
+                cp[top->line][varName] = variableValues[varName];
+            }
         } else if (top->nodeName == "stmt" && top->children[0]->nodeName == "if_stmt") {
             treeNode* condition = top->children[0]->children[2];
             staticCalc(condition, variableValues);
@@ -906,6 +933,7 @@ void staticCalc(treeNode *expr, map<string, int> &variableValues) {
                     expr->exprval = expr->children[0]->children[0]->exprval - expr->children[0]->children[1]->exprval;
                 } else if (expr->children[0]->nodeName == "MULT") {
                     expr->exprval = expr->children[0]->children[0]->exprval * expr->children[0]->children[1]->exprval;
+                    //cout << "Bhaloo " << expr->exprval << endl;
                 } else if (expr->children[0]->nodeName == "DIV") {
                     expr->exprval = expr->children[0]->children[0]->exprval / expr->children[0]->children[1]->exprval;
                 } else if (expr->children[0]->nodeName == "MOD") {
@@ -959,17 +987,14 @@ void simplifyExpr(treeNode *expr) {
     S.push(expr);
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
-        if (top->staticexpr && !((top->children[0]->nodeName == "Pexpr" && top->children[0]->children.size() == 1) || (top->nodeName == "Pexpr" && top->children.size() == 1) || top->nodeName == "integerLit")) {
-            
-            cout << "doing " << top->line << endl;
+        if (top->staticexpr && !((top->children.size() == 1 && top->children[0]->nodeName == "Pexpr" && top->children[0]->children.size() == 1) || (top->nodeName == "Pexpr" && top->children.size() == 1) || top->nodeName == "integerLit")) {
             if (cf.count(top->line) > 0) {
                 cf[top->line] = max(cf[top->line], top->exprval);
             } else {
                 cf[top->line] = top->exprval;
             }
-            cout << cf.size() << endl;
             *top = *makeIntegerLitexpr(top->exprval, (top->nodeName == "Pexpr"));
-            break;
+            //break;
         } else {
             for(treeNode* c: top->children) {
                 S.push(c);
@@ -1053,7 +1078,7 @@ void print_constant_folding() {
 }
 
 void print_constant_propagation() {
-    summary << "constant-prop" << endl;
+    summary << "constant-propagation" << endl;
     for (pair<int, map<string, int> > P: cp) {
         summary << P.first << " ";
         for (pair<string, int> Q: P.second) {

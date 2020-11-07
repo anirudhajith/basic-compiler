@@ -80,6 +80,9 @@ class x86 {
     void leaq(string address, string destination) {
         AScode << tab << "leaq " << address << "(%rip)" << " , " << destination << endl;
     }
+    void leaq2(string address, string destination) {
+        AScode << tab << "leaq " << address << " , " << destination << endl;
+    }
     void cmpl(string op2, string op1) {   // compares op1 with op2, yes the parameters are correct
         AScode << tab << "cmpl " << op2 << " , " << op1 << endl;
     }
@@ -119,6 +122,8 @@ class x86 {
         AScode << tab << ".section  .rodata" << endl;
         AScode << ".LC0:" << endl;
         AScode << tab << R"(.string	"%d\n")" << endl;
+        AScode << ".LC1:" << endl;
+        AScode << tab << R"(.string	"%d")" << endl;
         AScode << tab << ".text" << endl;
         AScode << tab << ".globl	main" << endl;
         AScode << tab << ".type	main, @function" << endl;
@@ -264,14 +269,11 @@ void binary_assign_code_gen(string op, string res, vector<string>& operands) {
         gen.movl("%eax", res_op);
     }
     else if(op == "MULT") {
-        cout << op1 << " " << op2 << endl;
-        cout << is_integer(op1) << " " << isPower2(to_integer(op1)) << " " << is_integer(op2) << " " << isPower2(to_integer(op2)) << endl;
         if (is_integer(op1) && isPower2(to_integer(op1))) {
             gen.movl(op2, "%eax");
             gen.sall(lg(to_integer(op1)), "%eax");
             gen.movl("%eax", res_op);
         } else if (is_integer(op2) && isPower2(to_integer(op2))) {
-            cout << "2nter" << endl;
             gen.movl(op1, "%eax");
             gen.sall(lg(to_integer(op2)), "%eax");
             gen.movl("%eax", res_op);
@@ -497,6 +499,14 @@ void printf_code_gen(string arg) {
     gen.call("printf@PLT");
 }
 
+void scanf_code_gen(string arg) {
+    string op = get_asm_symbol(arg);
+    gen.movl(op, "%esi");
+    gen.leaq2(".LC1", "%rdi");
+    gen.movl("$0", "%eax");
+    gen.call("scanf@PLT");
+}
+
 void parseStatement(string& line) {
     stringstream ss(line);
     string s;
@@ -583,6 +593,11 @@ void parseStatement(string& line) {
             // printf call
             string arg = statement[1];
             printf_code_gen(arg);            
+        }
+        else if(s == "scanf") {
+            // scanf call
+            string arg = statement[1];
+            scanf_code_gen(arg);            
         }
         else if(s == "return") {
             string op = get_asm_symbol(statement[1]);

@@ -17,6 +17,7 @@ letter [a-zA-Z]
 hex "0x"
 Ls "l"|"ll"|"L"|"LL"|"u"|"U"
 percentD \"%d\\n\"
+percentD2 \"%d\"
 number {digit}+(\.{digit}+)?(e[+-]?{digit}+)?{Ls}?  
 integer {digit}+{Ls}?
 hexinteger {hex}{hexdigit}+{Ls}?
@@ -47,6 +48,10 @@ comma ,
 
 {percentD} {
     return PERCENTD;
+}
+
+{percentD2} {
+    return PERCENTD2;
 }
 
 \"([^\n"\\]|\\.)*\" {
@@ -143,6 +148,10 @@ extern {
 
 printf {
     return PRINTF;
+}
+
+scanf {
+    return SCANF;
 }
 
 {integer} {

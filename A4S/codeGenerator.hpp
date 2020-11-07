@@ -501,8 +501,8 @@ void printf_code_gen(string arg) {
 
 void scanf_code_gen(string arg) {
     string op = get_asm_symbol(arg);
-    gen.movl(op, "%esi");
-    gen.leaq2(".LC1", "%rdi");
+    gen.leaq2(op, "%rsi");
+    gen.leaq(".LC1", "%rdi");
     gen.movl("$0", "%eax");
     gen.call("scanf@PLT");
 }

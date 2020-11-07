@@ -14,6 +14,7 @@ class treeNode {
         int level;                    // for printing
         bool staticexpr;              // is this expression statically evaluatable
         int exprval;                  // static expression value
+        int line;                     // line number
 
         /*****************
          * START IR FIELDS
@@ -52,7 +53,7 @@ class treeNode {
         * END IR FIELDS
        *****************/
 
-        treeNode(string nodeName, vector<treeNode*> children) {  // for non-terminals, assume valid pointers are passed
+        treeNode(string nodeName, vector<treeNode*> children, int lineno = 0) {  // for non-terminals, assume valid pointers are passed
             this->nodeName = nodeName;
             this->children = children;
             maxRootedLength = 1;
@@ -65,9 +66,10 @@ class treeNode {
             isArg = false;
             staticexpr = false;
             exprval = 0;
+            line = lineno;
             compute();
         }
-        treeNode(string nodeName) {     // for epsilon and terminals, no need to call compute
+        treeNode(string nodeName, int lineno = 0) {     // for epsilon and terminals, no need to call compute
             this->nodeName = nodeName;
             children.assign(0, NULL);
             maxRootedLength = 1;
@@ -78,6 +80,7 @@ class treeNode {
             offset = 0;
             isArg = false;
             code = "";
+            line = lineno;
         }
         int max_path_in_children() {
             vector<int> x;

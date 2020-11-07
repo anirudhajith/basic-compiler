@@ -5,6 +5,7 @@
     #include "y.tab.hpp"
     int print();
     extern char mytext[10000];
+    extern int line;
     // #if defined(__cplusplus)
     // }
     // #endif
@@ -31,11 +32,12 @@ comma ,
 %%
 
 "//".*[\n] {
-   
+   line++;
 }
 
 "/*"([^*]|\*+[^*/])*\*+"/" {
-    
+    for(int i = 0; yytext[i] != '\0'; i++) 
+        if(yytext[i] == '\n') line++;
 }
 
 "/*" {
@@ -271,7 +273,8 @@ printf {
 }
 
 {whiteSpace} {
-   
+   for(int i = 0; yytext[i] != '\0'; i++) 
+        if(yytext[i] == '\n') line++;
 }
 
 {dot} {

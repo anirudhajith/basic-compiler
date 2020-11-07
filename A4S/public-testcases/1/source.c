@@ -17,7 +17,6 @@ int main() {
     }
     return 0;
 }
-
 /*
 int main(){
     int a;
@@ -27,5 +26,22 @@ int main(){
     scanf("%d", &b);
 
     //printf("%d\n", b);
+}
+*/
+/*
+int main(){
+    int a;
+    int b;
+    a = 0;
+    b = 0;
+    if(a){
+        b = b + 5;
+    }
+    else{
+        b = b + 10;
+    }
+    //scanf("%d", &a);
+    printf("%d\n", a);
+    printf("%d\n", b);
 }
 */

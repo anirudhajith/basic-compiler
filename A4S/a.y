@@ -13,14 +13,24 @@
     void set_mainLongestPath(int);    // Set Longest Path of main subtee
     void set_switchLongestPath(int);  // Set Longest Path among all subtrees of switch statement
     void remove_unused_vars(treeNode*); // Delete unused var declarations from the ast  
+    void print_unused_vars();           // fill summary buffer
+    void print_if_simple();             // fill summary buffer
     void constants_and_if_simple(treeNode*);    // perform constant propagation, constant folding and static if simplification
+    void find_strength_reduction(treeNode* root); // fill sr
+    void print_strength_reduction();             // print sr
+    void print_constant_folding();               // print cf
+    void print_constant_propagation();           // print cp  
     void staticCalc(treeNode *expr, map<string, int> &variableValues);
     treeNode* makeIntegerLitexpr(int n, bool P);
     void simplifyExpr(treeNode *expr);
+    
     treeNode* placeholder_stmt();
+    
+
 
     extern FILE* yyin;
     char mytext[10000];
+    int line = 1;
     int programLongestPath = 0;
     int ifLongestPath = 0;
     int whileLongestPath = 0;
@@ -30,6 +40,12 @@
     extern char* yytext;
     treeNode* ast;   // pointer to the root of the final abstract syntax tree   
     stack<string> unused_vars;
+    vector<string> used_vars;
+    stringstream summary;
+    int if_simp = -1;
+    map<int, int> sr;
+    map<int, int> cf;
+    map<int, map<string, int> > cp;
 %}
 
 %union {
@@ -529,142 +545,143 @@ decr_stmt: identifier DEC ';'   {
 
 expr: Pexpr LT Pexpr    {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("LT", u);
+                            $2 = new treeNode("LT", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr GT Pexpr    {   
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("GT", u);
+                            $2 = new treeNode("GT", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr LEQ Pexpr   {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("LEQ", u);
+                            $2 = new treeNode("LEQ", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr GEQ Pexpr   {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("GEQ", u);
+                            $2 = new treeNode("GEQ", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr OR Pexpr    {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("OR", u);
+                            $2 = new treeNode("OR", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | SIZEOF '(' Pexpr ')'  {
                                 $1 = new treeNode("SIZEOF"); $2 = new treeNode("("); $4 = new treeNode(")");
                                 vector<treeNode*> v = {$1, $2, $3, $4};
-                                $$ = new treeNode("expr", v);
+                                $$ = new treeNode("expr", v, line);
                             }
     | Pexpr EQEQ Pexpr  {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("EQEQ", u);
+                            $2 = new treeNode("EQEQ", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr NEQ Pexpr   {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("NEQ", u);
+                            $2 = new treeNode("NEQ", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr NEWOP Pexpr {
                             vector<treeNode*> u = {$1, $3};
                             $2 = new treeNode("NEWOP", u);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr AND Pexpr   {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("AND", u);
+                            $2 = new treeNode("AND", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr ARROW Pexpr {
                             vector<treeNode*> u = {$1, $3};
                             $2 = new treeNode("ARROW", u);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr PLUS Pexpr  {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("PLUS", u);
+                            $2 = new treeNode("PLUS", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr MINUS Pexpr {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("MINUS", u);
+                            $2 = new treeNode("MINUS", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr MULT Pexpr  {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("MULT", u);
+                            $2 = new treeNode("MULT", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
+                            cout << "LLLL" << line << endl;
                         }
     | Pexpr DIV Pexpr   {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("DIV", u);
+                            $2 = new treeNode("DIV", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | Pexpr MOD Pexpr   {
                             vector<treeNode*> u = {$1, $3};
-                            $2 = new treeNode("MOD", u);
+                            $2 = new treeNode("MOD", u, line);
                             vector<treeNode*> v = {$2};
-                            $$ = new treeNode("expr", v);
+                            $$ = new treeNode("expr", v, line);
                         }
     | NOT Pexpr {
-                    $1 = new treeNode("NOT");
+                    $1 = new treeNode("NOT", line);
                     vector<treeNode*> v = {$1, $2};
-                    $$ = new treeNode("expr", v);
+                    $$ = new treeNode("expr", v, line);
                 }
     | MINUS Pexpr   {
-                        $1 = new treeNode("MINUS");
+                        $1 = new treeNode("MINUS", line);
                         vector<treeNode*> v = {$1, $2};
-                        $$ = new treeNode("expr", v);
+                        $$ = new treeNode("expr", v, line);
                     }
     | PLUS Pexpr    {
-                        $1 = new treeNode("PLUS");
+                        $1 = new treeNode("PLUS", line);
                         vector<treeNode*> v = {$1, $2};
-                        $$ = new treeNode("expr", v);
+                        $$ = new treeNode("expr", v, line);
                     }
     | MULT Pexpr    {
-                        $1 = new treeNode("MULT");
+                        $1 = new treeNode("MULT", line);
                         vector<treeNode*> v = {$1, $2};
-                        $$ = new treeNode("expr", v);
+                        $$ = new treeNode("expr", v, line);
                     }
     | BITAND Pexpr  {   
-                        $1 = new treeNode("BITAND");
+                        $1 = new treeNode("BITAND", line);
                         vector<treeNode*> v = {$1, $2};
-                        $$ = new treeNode("expr", v);
+                        $$ = new treeNode("expr", v, line);
                     }
     | Pexpr {
                 vector<treeNode*> v = {$1};
-                $$ = new treeNode("expr", v);
+                $$ = new treeNode("expr", v, line);
             }
     | identifier '(' args ')'   {
                                     $2 = new treeNode("("); $4 = new treeNode(")");
                                     vector<treeNode*> v = {$1, $2, $3, $4};
-                                    $$ = new treeNode("expr", v); 
+                                    $$ = new treeNode("expr", v, line); 
                                 }
     | identifier '[' expr ']'   {
                                     $2 = new treeNode("["); $4 = new treeNode("]");
                                     vector<treeNode*> v = {$1, $2, $3, $4};
-                                    $$ = new treeNode("expr", v); 
+                                    $$ = new treeNode("expr", v, line); 
                                 };
 
 Pexpr: integerLit   {
                         vector<treeNode*> v = {$1};
-                        $$ = new treeNode("Pexpr", v);
+                        $$ = new treeNode("Pexpr", v, line);
                     }
      | floatLit {
                     vector<treeNode*> v = {$1};
@@ -672,18 +689,18 @@ Pexpr: integerLit   {
                 }
      | identifier   {
                         vector<treeNode*> v = {$1};
-                        $$ = new treeNode("Pexpr", v);
+                        $$ = new treeNode("Pexpr", v, line);
                     }
      | '(' expr ')' {
                         $1 = new treeNode("("); $3 = new treeNode(")");
                         vector<treeNode*> v = {$1, $2, $3};
-                        $$ = new treeNode("Pexpr", v);
+                        $$ = new treeNode("Pexpr", v, line);
                     };
 
 integerLit: INTEGER_NUMBER  {
                                 $1 = new treeNode("INTEGER_NUMBER");
                                 vector<treeNode*> v = {$1};
-                                $$ = new treeNode("intergerLit", v);
+                                $$ = new treeNode("intergerLit", v, line);
                                 $$->lexValue = mytext;
                                 $$->width = 4;
                             };
@@ -699,7 +716,7 @@ floatLit: FLOAT_NUMBER  {
 identifier: IDENTIFIER  {
                             $1 = new treeNode("IDENTIFIER");
                             vector<treeNode*> v = {$1};
-                            $$ = new treeNode("identifier", v);
+                            $$ = new treeNode("identifier", v, line);
                             $$->lexValue = mytext;
                         } 
           | PRINTF  {
@@ -776,6 +793,7 @@ void remove_unused_vars(treeNode* root) {
 
         while(declarations->children[0]->nodeName != "epsilon") {
             string variableDeclared = declarations->children[1]->children[1]->lexValue;
+            used_vars.push_back(variableDeclared);
             if(variablesUsed.count(variableDeclared) == 0) {
                 unused_vars.push(variableDeclared);
                 *declarations = *(declarations->children[0]);
@@ -788,6 +806,7 @@ void remove_unused_vars(treeNode* root) {
             remove_unused_vars(c);
         }
     }
+    reverse(used_vars.begin(), used_vars.end());
 }
 
 void constants_and_if_simple(treeNode *ast) {
@@ -798,17 +817,12 @@ void constants_and_if_simple(treeNode *ast) {
 
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
-        //cout << top->nodeName << endl;
 
         if(top->nodeName == "local_decl") 
             variableValues[top->children[1]->lexValue] = 0;
         else if (top->nodeName == "assign_stmt") {
-            //cout << "Entered" << endl;
-            //for(auto c: top->children[0]->children) cout << c->nodeName << " "; cout << endl;
             staticCalc(top->children[0]->children[1], variableValues);
-            //cout << "Staticed" << endl;
             simplifyExpr(top->children[0]->children[1]);
-            //cout << "Simplified" << endl;
             if (top->children[0]->children[1]->staticexpr) {
                 variableValues[top->children[0]->children[0]->lexValue] = top->children[0]->children[1]->exprval;
             } else {
@@ -821,12 +835,14 @@ void constants_and_if_simple(treeNode *ast) {
             if (condition->staticexpr) {
                 if(condition->exprval) {
                     *top = *(top->children[0]->children[4]);
+                    if_simp = 1;
                 } else {
                     if (top->children[0]->children.size() == 7) {
                         *top = *(top->children[0]->children[6]);
                     } else {
                         top->children[0] = placeholder_stmt();
                     }
+                    if_simp = 0;
                 }
             }
             for(int i = top->children.size()-1; i >= 0; i--) {
@@ -846,7 +862,6 @@ void constants_and_if_simple(treeNode *ast) {
 
 
 void staticCalc(treeNode *expr, map<string, int> &variableValues) {
-    //cout << expr->nodeName << endl;
     if (expr->nodeName == "Pexpr") {
         if (expr->children[0]->nodeName == "intergerLit") {                             // integerLit
             expr->staticexpr = true;
@@ -856,6 +871,7 @@ void staticCalc(treeNode *expr, map<string, int> &variableValues) {
             if (variableValues.count(varName) > 0) {
                 expr->staticexpr = true;
                 expr->exprval = variableValues[varName];
+                cp[expr->children[0]->line][varName] = variableValues[varName];         
             }
         } else if (expr->children[1]->nodeName == "expr") {                             // '(' expr ')'
             staticCalc(expr->children[1], variableValues);
@@ -914,7 +930,6 @@ void staticCalc(treeNode *expr, map<string, int> &variableValues) {
             expr->exprval = expr->children[0]->exprval;
         }
     }
-    //cout << expr->staticexpr << " " << expr->exprval << endl;
 }
 
 treeNode* makeIntegerLitexpr(int n, bool P) {
@@ -932,7 +947,7 @@ treeNode* makeIntegerLitexpr(int n, bool P) {
     if(P) return p;
     else {
         v = {p};
-        treeNode* e = new treeNode("expr", v);
+        treeNode* e = new treeNode("expr", v, line);
         e->staticexpr = true;
         e->exprval = n;
         return e;
@@ -944,9 +959,17 @@ void simplifyExpr(treeNode *expr) {
     S.push(expr);
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
-        //cout << top->nodeName << endl;
-        if (top->staticexpr) {
+        if (top->staticexpr && !((top->children[0]->nodeName == "Pexpr" && top->children[0]->children.size() == 1) || (top->nodeName == "Pexpr" && top->children.size() == 1) || top->nodeName == "integerLit")) {
+            
+            cout << "doing " << top->line << endl;
+            if (cf.count(top->line) > 0) {
+                cf[top->line] = max(cf[top->line], top->exprval);
+            } else {
+                cf[top->line] = top->exprval;
+            }
+            cout << cf.size() << endl;
             *top = *makeIntegerLitexpr(top->exprval, (top->nodeName == "Pexpr"));
+            break;
         } else {
             for(treeNode* c: top->children) {
                 S.push(c);
@@ -961,16 +984,98 @@ treeNode* placeholder_stmt() {
     return new treeNode("continue_stmt", v);
 }
 
+int lg2(int n) {
+    int l = 0;
+    while(n > 1) {
+        n /= 2;
+        l++;
+    }
+    return l;
+}
+
+void find_strength_reduction(treeNode* root) {
+    stack<treeNode*> S;
+    S.push(root);
+
+    while(!S.empty()) {
+        treeNode* top = S.top(); S.pop();
+        if(top->nodeName == "MULT" && top->children.size() == 2) {
+            if (top->children[0]->staticexpr && isPower2(top->children[0]->exprval)) {
+                if (sr.count(top->line) > 0) {
+                    sr[top->line] = max(sr[top->line], lg2(top->children[0]->exprval));
+                } else {
+                    sr[top->line] = lg2(top->children[0]->exprval);
+                }
+            } else if (top->children[1]->staticexpr && isPower2(top->children[1]->exprval)) {
+                if (sr.count(top->line) > 0) {
+                    sr[top->line] = max(sr[top->line], lg2(top->children[1]->exprval));
+                } else {
+                    sr[top->line] = lg2(top->children[1]->exprval);
+                }
+            }
+        }
+        
+        for(treeNode* c: top->children) S.push(c);
+    }
+}
+
+void print_unused_vars() {
+    summary << "unused-vars" << endl;
+    while(!unused_vars.empty()) {
+        summary << unused_vars.top() << endl; unused_vars.pop();
+    }
+    summary << endl;
+}
+
+void print_if_simple() {
+    summary << "if-simpl" << endl;
+    if (if_simp >= 0) summary << if_simp << endl;
+    summary << endl;
+}
+
+void print_strength_reduction() {
+    //bool something = (sr.size() > 0);
+    summary << "strength-reduction" << endl;
+    for(pair<int,int> P: sr) {
+        summary << P.first << " " << P.second << endl;
+    }
+    //if (something) summary << endl;
+    summary << endl;
+
+}
+
+void print_constant_folding() {
+    summary << "constant-folding" << endl;
+    for(pair<int,int> P: cf) {
+        summary << P.first << " " << P.second << endl;
+    }
+    summary << endl;
+}
+
+void print_constant_propagation() {
+    summary << "constant-prop" << endl;
+    for (pair<int, map<string, int> > P: cp) {
+        summary << P.first << " ";
+        for (pair<string, int> Q: P.second) {
+            summary << Q.first << " " << Q.second << " ";
+        }
+        summary << endl;
+    }
+    summary << endl;
+}
+
 int main() {
     yyparse();
     remove_unused_vars(ast);
-    /*
-    while(!unused_vars.empty()) {
-        cout << unused_vars.top() << " "; unused_vars.pop();
-    }
-    cout << endl;
-    */
+    print_unused_vars();
     constants_and_if_simple(ast);
+    print_if_simple();
+    find_strength_reduction(ast);
+    print_strength_reduction();
+    print_constant_folding();
+    print_constant_propagation();
+    cout << summary.str() << endl;
+    
 
 
 

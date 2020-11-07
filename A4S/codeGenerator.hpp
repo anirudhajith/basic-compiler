@@ -173,10 +173,31 @@ long long int asm_label_count = 0ll;
 int to_integer(string s) {
     int val = 0;
     int factor = 10;
-    for(int i = 0; i < s.length(); i++) {
+    for(int i = 1; i < s.length(); i++) {
         val = val * factor + (s[i] - '0');
     }
     return val;
+}
+
+bool is_integer(string s) {
+    for(int i = 1; i < s.length(); i++) {
+        if (s[i] < '0' || s[i] > '9') return false;
+    }
+    return true;
+}
+
+bool isPower2(int n) {
+    while(n % 2 == 0) n /= 2;
+    return (n == 1);
+}
+
+string lg(int n) {
+    int l = 0;
+    while(n > 1) {
+        n /= 2;
+        l++;
+    }
+    return "$" + to_string(l);
 }
 
 string new_asm_Label() {   // returns new label
@@ -243,9 +264,22 @@ void binary_assign_code_gen(string op, string res, vector<string>& operands) {
         gen.movl("%eax", res_op);
     }
     else if(op == "MULT") {
-        gen.movl(op1, "%eax");
-        gen.imull(op2, "%eax");
-        gen.movl("%eax", res_op);
+        cout << op1 << " " << op2 << endl;
+        cout << is_integer(op1) << " " << isPower2(to_integer(op1)) << " " << is_integer(op2) << " " << isPower2(to_integer(op2)) << endl;
+        if (is_integer(op1) && isPower2(to_integer(op1))) {
+            gen.movl(op2, "%eax");
+            gen.sall(lg(to_integer(op1)), "%eax");
+            gen.movl("%eax", res_op);
+        } else if (is_integer(op2) && isPower2(to_integer(op2))) {
+            cout << "2nter" << endl;
+            gen.movl(op1, "%eax");
+            gen.sall(lg(to_integer(op2)), "%eax");
+            gen.movl("%eax", res_op);
+        } else {
+            gen.movl(op1, "%eax");
+            gen.imull(op2, "%eax");
+            gen.movl("%eax", res_op);
+        }
     }
     else if(op == "DIV" or op == "MOD") {
         gen.movl("$0", "%edx");

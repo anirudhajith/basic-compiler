@@ -15,6 +15,7 @@ class treeNode {
         bool staticexpr;              // is this expression statically evaluatable
         int exprval;                  // static expression value
         int line;                     // line number
+        string estring;               // for cse
 
         /*****************
          * START IR FIELDS

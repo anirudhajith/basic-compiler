@@ -1,0 +1,82 @@
+main:
+scanf a1_main_1
+scanf a2_main_1
+scanf a3_main_1
+scanf a4_main_1
+scanf a5_main_1
+scanf a6_main_1
+scanf a7_main_1
+scanf a8_main_1
+scanf a9_main_1
+scanf a10_main_1
+scanf a11_main_1
+scanf a12_main_1
+scanf a13_main_1
+scanf a14_main_1
+scanf a15_main_1
+scanf a16_main_1
+scanf a17_main_1
+scanf a18_main_1
+scanf a19_main_1
+scanf a20_main_1
+scanf a21_main_1
+scanf a22_main_1
+scanf a23_main_1
+scanf a24_main_1
+scanf a25_main_1
+scanf a26_main_1
+$t1 = a1_main_1 PLUS a2_main_1
+a27_main_1 = $t1
+$t3 = $t1 PLUS a3_main_1
+a15_main_1 = $t3
+$t6 = $t3 PLUS a4_main_1
+a16_main_1 = $t6
+$t10 = $t6 PLUS a5_main_1
+a17_main_1 = $t10
+$t15 = $t10 PLUS a6_main_1
+a18_main_1 = $t15
+$t21 = $t15 PLUS a7_main_1
+a19_main_1 = $t21
+$t28 = $t21 PLUS a8_main_1
+a20_main_1 = $t28
+$t36 = $t28 PLUS a9_main_1
+a21_main_1 = $t36
+$t45 = $t36 PLUS a10_main_1
+a22_main_1 = $t45
+$t55 = $t45 PLUS a11_main_1
+a23_main_1 = $t55
+$t66 = $t55 PLUS a12_main_1
+a24_main_1 = $t66
+$t78 = $t66 PLUS a13_main_1
+a25_main_1 = $t78
+$t91 = $t78 PLUS a14_main_1
+a26_main_1 = $t91
+printf a1_main_1
+printf a2_main_1
+printf a3_main_1
+printf a4_main_1
+printf a5_main_1
+printf a6_main_1
+printf a7_main_1
+printf a8_main_1
+printf a9_main_1
+printf a10_main_1
+printf a11_main_1
+printf a12_main_1
+printf a13_main_1
+printf a14_main_1
+printf a15_main_1
+printf a16_main_1
+printf a17_main_1
+printf a18_main_1
+printf a19_main_1
+printf a20_main_1
+printf a21_main_1
+printf a22_main_1
+printf a23_main_1
+printf a24_main_1
+printf a25_main_1
+printf a26_main_1
+printf a27_main_1
+return 0
+end

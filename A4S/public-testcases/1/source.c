@@ -9,7 +9,7 @@ int main() {
     scanf("%d", &b);
     b = (b + 5) * (2 + 3);
 
-    if(a > 10) {
+    if(/*a*/b > 10) {
         b = b + 10;
         printf("%d\n", b);
     } else {

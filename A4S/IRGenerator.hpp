@@ -17,6 +17,8 @@ long long int temp_count = 1ll;
 extern treeNode* ast;
 
 ofstream IR;        // file containing IR
+ifstream in;        // read from a.ir
+ofstream out;       // write to b.ir
 
 symbolTableStack env;    // current symbol table environment
 symbolTable final_table;    // used for code generation
@@ -459,6 +461,102 @@ void traverseAST(treeNode* root) {
    }
 }
 
+string getAlias(string t, map<string, string> &alias) {
+    while (t != alias[t]) {
+        t = alias[t];
+    }
+    return t;
+}
+
+void refineIR() {
+    map<string, string> expr;
+    map<string, string> alias;
+    string line;
+    while (getline(in, line)) {
+        if (line.find(":") != string::npos || line.substr(0,2) == "if" || line.substr(0,4) == "goto") {           // label, jump
+            expr.clear();
+            out << line << endl;
+        } else if (line.substr(0, 6) == "scanf ") {     // scanf
+            string var = line.substr(6);
+            for(pair<string, string> P: expr) {
+                if (count(P.first.begin(),P.first.end(),' ') == 2) {      // $t1 MULT a_main_1
+                    stringstream ss(P.first);
+                    string op1, op, op2;
+                    ss >> op1 >> op >> op2;
+                    if ((op1 == var) || (op2 == var)) {
+                        expr.erase(P.first);
+                    }
+                } else if (count(P.first.begin(),P.first.end(),' ') == 1) {           // MINUS a_main_1
+                    stringstream ss(P.first);
+                    string op1, op;
+                    ss >> op >> op1 ;
+                    if (op1 == var) {
+                        expr.erase(P.first);
+                    }
+                }
+            }
+            out << line << endl;
+        } else if (line.find(" = ") != string::npos) {          // assignment
+            int numSpaces = count(line.begin(),line.end(),' ');
+            if (numSpaces == 4) {   // $t1 = $t2 MULT a_main_1
+                stringstream ss(line);
+                string lhs, eq, op1, op, op2;
+                ss >> lhs >> eq >> op1 >> op >> op2;
+                line = lhs + " = " + ((alias.count(op1) > 0)?getAlias(op1, alias):op1) + " " + op + " " + ((alias.count(op2) > 0)?getAlias(op2, alias):op2);
+                int rhsStart = line.find("=") + 2;
+                string rhs = line.substr(rhsStart);
+                if(expr.count(rhs) > 0) {
+                    alias[lhs] = expr[rhs];
+                } else {
+                    expr[rhs] = lhs;
+                    alias[lhs] = lhs;
+                    out << line << endl;
+                }
+            } else if (numSpaces == 3) {   // $t1 = MINUS a_main_1
+                stringstream ss(line);
+                string lhs, eq, op1, op;
+                ss >> lhs >> eq >> op >> op1;
+                line = lhs + " = " + op + " " + ((alias.count(op1) > 0)?getAlias(op1, alias):op1);
+                int rhsStart = line.find("=") + 2;
+                string rhs = line.substr(rhsStart);
+                if(expr.count(rhs) > 0) {
+                    alias[lhs] = expr[rhs];
+                } else {
+                    expr[rhs] = lhs;
+                    alias[lhs] = lhs;
+                    out << line << endl;
+                }
+            } else if (numSpaces == 2) {    // a_main_1 = $t3
+                stringstream ss(line);
+                string var, eq, temp;
+                ss >> var >> eq >> temp;
+                temp = (alias.count(temp) > 0)?getAlias(temp, alias):temp;
+                line = var + " = " + temp;
+                for(pair<string, string> P: expr) {
+                    if (count(P.first.begin(),P.first.end(),' ') == 2) {      // $t1 MULT a_main_1
+                        stringstream ss(P.first);
+                        string op1, op, op2;
+                        ss >> op1 >> op >> op2;
+                        if ((op1 == var) || (op2 == var)) {
+                            expr.erase(P.first);
+                        }
+                    } else if (count(P.first.begin(),P.first.end(),' ') == 1) {           // MINUS a_main_1
+                        stringstream ss(P.first);
+                        string op1, op;
+                        ss >> op >> op1 ;
+                        if (op1 == var) {
+                            expr.erase(P.first);
+                        }
+                    }
+                }
+                out << line << endl;
+            } 
+        } else {
+            out << line << endl;
+        }
+    }
+}
+
 int generateIR() {
     //printAST(ast, "", true);
     IR.open("a.ir");
@@ -466,6 +564,12 @@ int generateIR() {
     // cout << "-----------3AC---------" << endl;
     IR.close();
     // final_table.debug();  // final symbol table
+    in.open("a.ir");
+    out.open("b.ir");
+    refineIR();
+    in.close();
+    out.close();
+
     codeGenerator();    // generate x86 code
     return 0;
 }

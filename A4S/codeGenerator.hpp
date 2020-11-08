@@ -614,7 +614,7 @@ void parseStatement(string& line) {
 
 void codeGenerator() {
     AScode.open("a.s");  // assembly code for x86
-    ifstream IRcode("a.ir");
+    ifstream IRcode("b.ir");
     char* buffer = new char[MAXN];
     gen.begin();    
     while(IRcode.getline(buffer, MAXN, '\n')) {

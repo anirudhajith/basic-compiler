@@ -23,6 +23,10 @@
     void staticCalc(treeNode *expr, map<string, int> &variableValues);
     treeNode* makeIntegerLitexpr(int n, bool P);
     void simplifyExpr(treeNode *expr);
+    void find_cses(treeNode *root);
+    void init_expr_code(treeNode *root);
+    void print_cses();
+
     
     treeNode* placeholder_stmt();
     
@@ -46,6 +50,8 @@
     map<int, int> sr;
     map<int, int> cf;
     map<int, map<string, int> > cp;
+    map<string, int> ssa;
+    map<string, vector<int> > cse;
 %}
 
 %union {
@@ -812,6 +818,7 @@ void remove_unused_vars(treeNode* root) {
 
         while(declarations->children[0]->nodeName != "epsilon") {
             string variableDeclared = declarations->children[1]->children[1]->lexValue;
+            ssa[variableDeclared] = 1;
             used_vars.push_back(variableDeclared);
             if(variablesUsed.count(variableDeclared) == 0) {
                 unused_vars.push(variableDeclared);
@@ -960,7 +967,7 @@ void staticCalc(treeNode *expr, map<string, int> &variableValues) {
     }
 }
 
-treeNode* makeIntegerLitexpr(int n, bool P) {
+treeNode* makeIntegerLitexpr(int n, bool P, int line) {
     treeNode* base = new treeNode("INTEGER_NUMBER");
     vector<treeNode*> v = {base};
     treeNode* iL = new treeNode("intergerLit", v);
@@ -968,16 +975,19 @@ treeNode* makeIntegerLitexpr(int n, bool P) {
     iL->exprval = n;
     iL->lexValue = to_string(n);
     iL->width = 4;
+    iL->line = line;
     v = {iL};
     treeNode* p = new treeNode("Pexpr", v);
     p->staticexpr = true;
     p->exprval = n;
+    p->line = line;
     if(P) return p;
     else {
         v = {p};
         treeNode* e = new treeNode("expr", v, line);
         e->staticexpr = true;
         e->exprval = n;
+        e->line = line;
         return e;
     }
 }
@@ -987,13 +997,19 @@ void simplifyExpr(treeNode *expr) {
     S.push(expr);
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
-        if (top->staticexpr && !((top->children.size() == 1 && top->children[0]->nodeName == "Pexpr" && top->children[0]->children.size() == 1) || (top->nodeName == "Pexpr" && top->children.size() == 1) || top->nodeName == "integerLit")) {
-            if (cf.count(top->line) > 0) {
-                cf[top->line] = max(cf[top->line], top->exprval);
-            } else {
-                cf[top->line] = top->exprval;
+        if (top->staticexpr) {
+
+            if (!((top->children.size() == 1 && top->children[0]->nodeName == "Pexpr" && top->children[0]->children.size() == 1) || (top->nodeName == "Pexpr" && top->children.size() == 1) || top->nodeName == "intergerLit")) {
+                if (cf.count(top->line) > 0) {
+                    cf[top->line] = max(cf[top->line], top->exprval);
+                } else {
+                    cf[top->line] = top->exprval;
+                }
             }
-            *top = *makeIntegerLitexpr(top->exprval, (top->nodeName == "Pexpr"));
+
+            //printAST(top, "111", true);
+            *top = *makeIntegerLitexpr(top->exprval, (top->nodeName == "Pexpr"), top->line);
+            //printAST(top, "222", true);
             //break;
         } else {
             for(treeNode* c: top->children) {
@@ -1044,6 +1060,67 @@ void find_strength_reduction(treeNode* root) {
     }
 }
 
+void init_expr_code(treeNode *root) {
+    //if(root->estring != "") return;
+    if (root->nodeName == "intergerLit") {
+        //cout << "intergerLit " << " " << root->lexValue << " " << root->exprval << endl;
+        root->estring = to_string(root->exprval);
+    } else if (root->nodeName == "identifier") {
+        root->estring = root->lexValue + "_qfwio4fjoifpjf_" + to_string(ssa[root->lexValue]);
+        //root->lexValue = root->estring;
+    } else if (root->nodeName == "Pexpr") {
+        if (root->children.size() == 1) {
+            //printAST(root, "", true);
+            init_expr_code(root->children[0]);
+            root->estring = root->children[0]->estring;
+        } else {
+            init_expr_code(root->children[1]);
+            root->estring = "(" + root->children[1]->estring + ")";
+        }
+        root->estring = "Pexpr(" + root->estring + ")";
+    } else if (root->nodeName == "expr") {
+        if (root->children.size() == 1) {
+            init_expr_code(root->children[0]);
+            root->estring = root->children[0]->estring;
+        }
+        root->estring = "expr(" + root->estring + ")";
+    } else if (root->nodeName == "MULT" || root->nodeName == "PLUS" || root->nodeName == "MINUS") {
+        init_expr_code(root->children[0]);
+        init_expr_code(root->children[1]);
+        root->estring = root->children[0]->estring + " " + root->nodeName + " " + root->children[1]->estring;
+    }
+
+    if (root->nodeName == "expr" && 
+        !((root->children.size() == 1 && root->children[0]->nodeName == "Pexpr" && root->children[0]->children.size() == 1) 
+        || (root->nodeName == "Pexpr" && root->children.size() == 1) 
+        || root->nodeName == "intergerLit" 
+        || root->nodeName == "identifier"))
+        cse[root->estring].push_back(root->line);
+        //cout << root->line << " " << root->estring << " " << root->nodeName << endl;
+}
+
+void find_cses(treeNode *root) {
+    stack<treeNode*> S;
+    S.push(root);
+
+    while(!S.empty()) {
+        treeNode *top = S.top(); S.pop();
+        if (top->nodeName == "assign_stmt") {
+            init_expr_code(top->children[0]->children[1]);
+            ssa[top->children[0]->children[0]->lexValue]++;
+        } else if (top->nodeName == "scan_stmt") {
+            ssa[top->children[4]->lexValue]++;
+        } else if (top->nodeName == "expr") {
+            init_expr_code(top);
+        } else {
+            for(int i=top->children.size()-1; i>=0; i--) {
+                S.push(top->children[i]);
+            }
+        }
+
+    }
+}
+
 void print_unused_vars() {
     summary << "unused-vars" << endl;
     while(!unused_vars.empty()) {
@@ -1089,16 +1166,50 @@ void print_constant_propagation() {
     summary << endl;
 }
 
+void print_cses() {
+    
+    summary << "cse" << endl;
+    vector<string> ss;
+    for(pair<string, vector<int> > P: cse) {
+        string s;
+        if (P.second.size() > 1) {
+            for(int l: P.second) {
+                s = s + to_string(l) + " ";
+            }
+            ss.push_back(s);
+        }
+    }
+    sort(ss.begin(), ss.end());
+    for(string s: ss) summary << s << endl;
+    summary << endl;
+
+/*
+    summary << "cse" << endl;
+    for(pair<string, vector<int> > P: cse) {
+        if (P.second.size() > 1) {
+            summary << P.first << ": ";
+            for(int l: P.second) {
+                summary << l << " ";
+            }
+            summary << endl;
+        }
+    }
+    summary << endl;
+*/
+}
+
 int main() {
     yyparse();
+    constants_and_if_simple(ast);
     remove_unused_vars(ast);
     print_unused_vars();
-    constants_and_if_simple(ast);
     print_if_simple();
     find_strength_reduction(ast);
     print_strength_reduction();
     print_constant_folding();
     print_constant_propagation();
+    find_cses(ast);
+    print_cses();
     cout << summary.str() << endl;
     
 

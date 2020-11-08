@@ -16,16 +16,18 @@
     void print_unused_vars();           // fill summary buffer
     void print_if_simple();             // fill summary buffer
     void constants_and_if_simple(treeNode*);    // perform constant propagation, constant folding and static if simplification
-    void find_strength_reduction(treeNode* root); // fill sr
+    void gingerly_handle_if_block(treeNode*, map<string, int>, set<string> &); // take care of scoping complications with if stmts
+    void find_strength_reduction(treeNode*); // fill sr
     void print_strength_reduction();             // print sr
     void print_constant_folding();               // print cf
     void print_constant_propagation();           // print cp  
-    void staticCalc(treeNode *expr, map<string, int> &variableValues);
+    void print_cses();                          // print cse
+    void staticCalc(treeNode*, map<string, int> &);
     treeNode* makeIntegerLitexpr(int n, bool P);
-    void simplifyExpr(treeNode *expr);
-    void find_cses(treeNode *root);
-    void init_expr_code(treeNode *root);
-    void print_cses();
+    void simplifyExpr(treeNode*);
+    void find_cses(treeNode*);
+    void init_expr_code(treeNode*);
+    
 
     
     treeNode* placeholder_stmt();
@@ -879,9 +881,17 @@ void constants_and_if_simple(treeNode *ast) {
                     if_simp = 0;
                 }
             }
-            for(int i = top->children.size()-1; i >= 0; i--) {
-                S.push(top->children[i]);
+            set<string> varsToErase;
+
+            gingerly_handle_if_block(top->children[0]->children[4], variableValues, varsToErase);
+
+            if (top->children[0]->children.size() == 7)
+                gingerly_handle_if_block(top->children[0]->children[6], variableValues, varsToErase);
+            
+            for(string var: varsToErase) {
+                variableValues.erase(var);
             }
+
         } else if (top->nodeName == "return_stmt") {
             staticCalc(top->children[1], variableValues);
             simplifyExpr(top->children[1]);
@@ -894,6 +904,44 @@ void constants_and_if_simple(treeNode *ast) {
 
 }
 
+void gingerly_handle_if_block(treeNode* root, map<string, int> variableValues, set<string> &varsToErase) {
+    //printAST(root, "", true);
+    stack<treeNode*> S;   
+    S.push(root);
+
+    while(!S.empty()) {
+        treeNode* top = S.top(); S.pop();
+
+        if (top->nodeName == "assign_stmt") {
+            staticCalc(top->children[0]->children[1], variableValues);
+            simplifyExpr(top->children[0]->children[1]);
+            if (top->children[0]->children[1]->staticexpr) {
+                variableValues[top->children[0]->children[0]->lexValue] = top->children[0]->children[1]->exprval;
+            } else {
+                variableValues.erase(top->children[0]->children[0]->lexValue);
+            }
+            //cout << "Adding " << top->children[0]->children[0]->lexValue <<  " " << top->nodeName << endl;
+            varsToErase.insert(top->children[0]->children[0]->lexValue);
+        } else if (top->nodeName == "scan_stmt") {
+            string varName = top->children[4]->lexValue;
+            variableValues.erase(varName);
+            varsToErase.insert(varName);
+        } else if (top->nodeName == "print_stmt") {
+            string varName = top->children[4]->lexValue;
+            if (variableValues.count(varName) > 0) {
+                cp[top->line][varName] = variableValues[varName];
+            }
+        } else if (top->nodeName == "return_stmt") {
+            staticCalc(top->children[1], variableValues);
+            simplifyExpr(top->children[1]);
+        } else {
+            for(int i = top->children.size()-1; i >= 0; i--) {
+                S.push(top->children[i]);
+            }
+        }
+    }
+
+}
 
 void staticCalc(treeNode *expr, map<string, int> &variableValues) {
     if (expr->nodeName == "Pexpr") {
@@ -1112,6 +1160,8 @@ void find_cses(treeNode *root) {
             ssa[top->children[4]->lexValue]++;
         } else if (top->nodeName == "expr") {
             init_expr_code(top);
+        } else if (top->nodeName == "if_stmt") {
+            S.push(top->children[2]);
         } else {
             for(int i=top->children.size()-1; i>=0; i--) {
                 S.push(top->children[i]);

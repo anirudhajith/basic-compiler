@@ -4,7 +4,7 @@
 ✔ Implement line numbering
 ✔ add line numbering, printing to current optimisation messages
 ✔ add scanf
-☐ modify if simplification for correctness for statically non-determinable conditions
+✔ modify if simplification for correctness for statically non-determinable conditions (visual aid T5)
 ✔ implement AST level common subexpression detection
 ✔ implement IR level common subexpression elimination
 ✔ handle unused variable with if

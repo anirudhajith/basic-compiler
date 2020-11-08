@@ -473,7 +473,7 @@ void refineIR() {
     map<string, string> alias;
     string line;
     while (getline(in, line)) {
-        if (line.find(":") != string::npos || line.substr(0,2) == "if" || line.substr(0,4) == "goto") {           // label, jump
+        if (line.find(":") != string::npos || line.substr(0,4) == "goto") {           // label, jump
             expr.clear();
             out << line << endl;
         } else if (line.substr(0, 6) == "scanf ") {     // scanf

@@ -1,160 +1,26 @@
 main:
-scanf a1_main_1
-scanf a2_main_1
-scanf a3_main_1
-scanf a4_main_1
-scanf a5_main_1
-scanf a6_main_1
-scanf a7_main_1
-scanf a8_main_1
-scanf a9_main_1
-scanf a10_main_1
-scanf a11_main_1
-scanf a12_main_1
-scanf a13_main_1
-scanf a14_main_1
-scanf a15_main_1
-scanf a16_main_1
-scanf a17_main_1
-scanf a18_main_1
-scanf a19_main_1
-scanf a20_main_1
-scanf a21_main_1
-scanf a22_main_1
-scanf a23_main_1
-scanf a24_main_1
-scanf a25_main_1
-scanf a26_main_1
-$t1 = a1_main_1 PLUS a2_main_1
-a27_main_1 = $t1
-$t2 = a1_main_1 PLUS a2_main_1
-$t3 = $t2 PLUS a3_main_1
-a15_main_1 = $t3
-$t4 = a1_main_1 PLUS a2_main_1
-$t5 = $t4 PLUS a3_main_1
-$t6 = $t5 PLUS a4_main_1
-a16_main_1 = $t6
-$t7 = a1_main_1 PLUS a2_main_1
-$t8 = $t7 PLUS a3_main_1
-$t9 = $t8 PLUS a4_main_1
-$t10 = $t9 PLUS a5_main_1
-a17_main_1 = $t10
-$t11 = a1_main_1 PLUS a2_main_1
-$t12 = $t11 PLUS a3_main_1
-$t13 = $t12 PLUS a4_main_1
-$t14 = $t13 PLUS a5_main_1
-$t15 = $t14 PLUS a6_main_1
-a18_main_1 = $t15
-$t16 = a1_main_1 PLUS a2_main_1
-$t17 = $t16 PLUS a3_main_1
-$t18 = $t17 PLUS a4_main_1
-$t19 = $t18 PLUS a5_main_1
-$t20 = $t19 PLUS a6_main_1
-$t21 = $t20 PLUS a7_main_1
-a19_main_1 = $t21
-$t22 = a1_main_1 PLUS a2_main_1
-$t23 = $t22 PLUS a3_main_1
-$t24 = $t23 PLUS a4_main_1
-$t25 = $t24 PLUS a5_main_1
-$t26 = $t25 PLUS a6_main_1
-$t27 = $t26 PLUS a7_main_1
-$t28 = $t27 PLUS a8_main_1
-a20_main_1 = $t28
-$t29 = a1_main_1 PLUS a2_main_1
-$t30 = $t29 PLUS a3_main_1
-$t31 = $t30 PLUS a4_main_1
-$t32 = $t31 PLUS a5_main_1
-$t33 = $t32 PLUS a6_main_1
-$t34 = $t33 PLUS a7_main_1
-$t35 = $t34 PLUS a8_main_1
-$t36 = $t35 PLUS a9_main_1
-a21_main_1 = $t36
-$t37 = a1_main_1 PLUS a2_main_1
-$t38 = $t37 PLUS a3_main_1
-$t39 = $t38 PLUS a4_main_1
-$t40 = $t39 PLUS a5_main_1
-$t41 = $t40 PLUS a6_main_1
-$t42 = $t41 PLUS a7_main_1
-$t43 = $t42 PLUS a8_main_1
-$t44 = $t43 PLUS a9_main_1
-$t45 = $t44 PLUS a10_main_1
-a22_main_1 = $t45
-$t46 = a1_main_1 PLUS a2_main_1
-$t47 = $t46 PLUS a3_main_1
-$t48 = $t47 PLUS a4_main_1
-$t49 = $t48 PLUS a5_main_1
-$t50 = $t49 PLUS a6_main_1
-$t51 = $t50 PLUS a7_main_1
-$t52 = $t51 PLUS a8_main_1
-$t53 = $t52 PLUS a9_main_1
-$t54 = $t53 PLUS a10_main_1
-$t55 = $t54 PLUS a11_main_1
-a23_main_1 = $t55
-$t56 = a1_main_1 PLUS a2_main_1
-$t57 = $t56 PLUS a3_main_1
-$t58 = $t57 PLUS a4_main_1
-$t59 = $t58 PLUS a5_main_1
-$t60 = $t59 PLUS a6_main_1
-$t61 = $t60 PLUS a7_main_1
-$t62 = $t61 PLUS a8_main_1
-$t63 = $t62 PLUS a9_main_1
-$t64 = $t63 PLUS a10_main_1
-$t65 = $t64 PLUS a11_main_1
-$t66 = $t65 PLUS a12_main_1
-a24_main_1 = $t66
-$t67 = a1_main_1 PLUS a2_main_1
-$t68 = $t67 PLUS a3_main_1
-$t69 = $t68 PLUS a4_main_1
-$t70 = $t69 PLUS a5_main_1
-$t71 = $t70 PLUS a6_main_1
-$t72 = $t71 PLUS a7_main_1
-$t73 = $t72 PLUS a8_main_1
-$t74 = $t73 PLUS a9_main_1
-$t75 = $t74 PLUS a10_main_1
-$t76 = $t75 PLUS a11_main_1
-$t77 = $t76 PLUS a12_main_1
-$t78 = $t77 PLUS a13_main_1
-a25_main_1 = $t78
-$t79 = a1_main_1 PLUS a2_main_1
-$t80 = $t79 PLUS a3_main_1
-$t81 = $t80 PLUS a4_main_1
-$t82 = $t81 PLUS a5_main_1
-$t83 = $t82 PLUS a6_main_1
-$t84 = $t83 PLUS a7_main_1
-$t85 = $t84 PLUS a8_main_1
-$t86 = $t85 PLUS a9_main_1
-$t87 = $t86 PLUS a10_main_1
-$t88 = $t87 PLUS a11_main_1
-$t89 = $t88 PLUS a12_main_1
-$t90 = $t89 PLUS a13_main_1
-$t91 = $t90 PLUS a14_main_1
-a26_main_1 = $t91
-printf a1_main_1
-printf a2_main_1
-printf a3_main_1
-printf a4_main_1
-printf a5_main_1
-printf a6_main_1
-printf a7_main_1
-printf a8_main_1
-printf a9_main_1
-printf a10_main_1
-printf a11_main_1
-printf a12_main_1
-printf a13_main_1
-printf a14_main_1
-printf a15_main_1
-printf a16_main_1
-printf a17_main_1
-printf a18_main_1
-printf a19_main_1
-printf a20_main_1
-printf a21_main_1
-printf a22_main_1
-printf a23_main_1
-printf a24_main_1
-printf a25_main_1
-printf a26_main_1
-printf a27_main_1
+scanf a_main_1
+scanf b_main_1
+scanf c_main_1
+scanf d_main_1
+$t1 = b_main_1 PLUS c_main_1
+a_main_1 = $t1
+$t2 = b_main_1 PLUS c_main_1
+d_main_1 = $t2
+$t3 = b_main_1 PLUS c_main_1
+$t4 = b_main_1 PLUS c_main_1
+$t5 = $t3 PLUS $t4
+d_main_1 = $t5
+scanf b_main_1
+$t6 = b_main_1 PLUS c_main_1
+$t7 = b_main_1 PLUS c_main_1
+$t8 = $t6 PLUS $t7
+$t9 = b_main_1 PLUS c_main_1
+$t10 = $t8 PLUS $t9
+d_main_1 = $t10
+printf a_main_1
+printf b_main_1
+printf c_main_1
+printf d_main_1
 return 0
 end

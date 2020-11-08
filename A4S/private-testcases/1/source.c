@@ -1,23 +1,21 @@
 int main() {
-    int u;
+    int a;
+    int b;
+    int c;
     int x;
     int y;
     int z;
-    u = 9 * 2;
-    y = 12;
+    int w;
+
     scanf("%d", &x);
-    z = x + u;
-    if (x > 15) {
-        u = 3*6;
-        z = x + u;
-    } else {
-        u = (4*7) + 3;
-        z = x + u;
-    }
-
-    u = (x - y) * u;
-
+    
+    a = 1 * x;
+    b = 2 * x;
+    c = 4 * x;
+    y = x * 1;
+    z = x * 2;
+    w = x * 4;
+    
     printf("%d\n", z);
-    printf("%d\n", u);
     return 0;
 }

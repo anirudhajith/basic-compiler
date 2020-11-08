@@ -880,18 +880,17 @@ void constants_and_if_simple(treeNode *ast) {
                     }
                     if_simp = 0;
                 }
+            } else {
+                set<string> varsToErase;
+
+                gingerly_handle_if_block(top->children[0]->children[4], variableValues, varsToErase);
+                if (top->children[0]->children.size() == 7)
+                    gingerly_handle_if_block(top->children[0]->children[6], variableValues, varsToErase);
+
+                for(string var: varsToErase) {
+                    variableValues.erase(var);
+                }
             }
-            set<string> varsToErase;
-
-            gingerly_handle_if_block(top->children[0]->children[4], variableValues, varsToErase);
-
-            if (top->children[0]->children.size() == 7)
-                gingerly_handle_if_block(top->children[0]->children[6], variableValues, varsToErase);
-            
-            for(string var: varsToErase) {
-                variableValues.erase(var);
-            }
-
         } else if (top->nodeName == "return_stmt") {
             staticCalc(top->children[1], variableValues);
             simplifyExpr(top->children[1]);
@@ -905,10 +904,9 @@ void constants_and_if_simple(treeNode *ast) {
 }
 
 void gingerly_handle_if_block(treeNode* root, map<string, int> variableValues, set<string> &varsToErase) {
-    //printAST(root, "", true);
+    
     stack<treeNode*> S;   
     S.push(root);
-
     while(!S.empty()) {
         treeNode* top = S.top(); S.pop();
 
@@ -920,7 +918,6 @@ void gingerly_handle_if_block(treeNode* root, map<string, int> variableValues, s
             } else {
                 variableValues.erase(top->children[0]->children[0]->lexValue);
             }
-            //cout << "Adding " << top->children[0]->children[0]->lexValue <<  " " << top->nodeName << endl;
             varsToErase.insert(top->children[0]->children[0]->lexValue);
         } else if (top->nodeName == "scan_stmt") {
             string varName = top->children[4]->lexValue;
@@ -1250,6 +1247,7 @@ void print_cses() {
 
 int main() {
     yyparse();
+
     constants_and_if_simple(ast);
     remove_unused_vars(ast);
     print_unused_vars();

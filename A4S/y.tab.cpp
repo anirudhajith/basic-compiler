@@ -2982,6 +2982,9 @@ void constants_and_if_simple(treeNode *ast) {
                     }
                     if_simp = 0;
                 }
+                for(int i = top->children.size()-1; i >= 0; i--) {
+                    S.push(top->children[i]);
+                }
             } else {
                 set<string> varsToErase;
 
@@ -3087,7 +3090,6 @@ void staticCalc(treeNode *expr, map<string, int> &variableValues) {
                     expr->exprval = expr->children[0]->children[0]->exprval - expr->children[0]->children[1]->exprval;
                 } else if (expr->children[0]->nodeName == "MULT") {
                     expr->exprval = expr->children[0]->children[0]->exprval * expr->children[0]->children[1]->exprval;
-                    //cout << "Bhaloo " << expr->exprval << endl;
                 } else if (expr->children[0]->nodeName == "DIV") {
                     expr->exprval = expr->children[0]->children[0]->exprval / expr->children[0]->children[1]->exprval;
                 } else if (expr->children[0]->nodeName == "MOD") {
@@ -3203,21 +3205,17 @@ void find_strength_reduction(treeNode* root) {
             }
         }
         
-        for(treeNode* c: top->children) S.push(c);
+        for(int i=top->children.size()-1; i>=0; i--) S.push(top->children[i]);
     }
 }
 
 void init_expr_code(treeNode *root) {
-    //if(root->estring != "") return;
     if (root->nodeName == "intergerLit") {
-        //cout << "intergerLit " << " " << root->lexValue << " " << root->exprval << endl;
         root->estring = to_string(root->exprval);
     } else if (root->nodeName == "identifier") {
         root->estring = root->lexValue + "_qfwio4fjoifpjf_" + to_string(ssa[root->lexValue]);
-        //root->lexValue = root->estring;
     } else if (root->nodeName == "Pexpr") {
         if (root->children.size() == 1) {
-            //printAST(root, "", true);
             init_expr_code(root->children[0]);
             root->estring = root->children[0]->estring;
         } else {
@@ -3229,6 +3227,9 @@ void init_expr_code(treeNode *root) {
         if (root->children.size() == 1) {
             init_expr_code(root->children[0]);
             root->estring = root->children[0]->estring;
+        } else if (root->children.size() == 2) {
+            init_expr_code(root->children[1]);
+            root->estring = root->children[0]->nodeName + "(" + root->children[1]->estring + ")";
         }
         root->estring = "expr(" + root->estring + ")";
     } else if (root->nodeName == "MULT" || root->nodeName == "PLUS" || root->nodeName == "MINUS") {
@@ -3243,7 +3244,6 @@ void init_expr_code(treeNode *root) {
         || root->nodeName == "intergerLit" 
         || root->nodeName == "identifier"))
         cse[root->estring].push_back(root->line);
-        //cout << root->line << " " << root->estring << " " << root->nodeName << endl;
 }
 
 void find_cses(treeNode *root) {
@@ -3330,7 +3330,7 @@ void print_cses() {
     }
     sort(ss.begin(), ss.end());
     for(string s: ss) summary << s << endl;
-    summary << endl;
+    //summary << endl;
 
 /*
     summary << "cse" << endl;
@@ -3349,19 +3349,22 @@ void print_cses() {
 
 int main() {
     yyparse();
-
+    
     constants_and_if_simple(ast);
     remove_unused_vars(ast);
     print_unused_vars();
     print_if_simple();
+    //printAST(ast, "", true);
     find_strength_reduction(ast);
     print_strength_reduction();
     print_constant_folding();
     print_constant_propagation();
     find_cses(ast);
     print_cses();
-    cout << summary.str() << endl;
     
+    ofstream summaryFile("summary.txt");
+    summaryFile << summary.rdbuf() << flush;
+    summaryFile.close();
 
 
 

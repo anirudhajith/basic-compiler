@@ -192,6 +192,7 @@ bool is_integer(string s) {
 }
 
 bool isPower2(int n) {
+    if (n == 0) return false;
     while(n % 2 == 0) n /= 2;
     return (n == 1);
 }
@@ -613,7 +614,7 @@ void parseStatement(string& line) {
 }
 
 void codeGenerator() {
-    AScode.open("a.s");  // assembly code for x86
+    AScode.open("assembly.s");  // assembly code for x86
     ifstream IRcode("b.ir");
     char* buffer = new char[MAXN];
     gen.begin();    
@@ -623,9 +624,12 @@ void codeGenerator() {
     }
     AScode.close();
     // print assembly code to stdout
-    ifstream x86_code("a.s");
+    /*
+    ifstream x86_code("assembly.s");
     while(x86_code.getline(buffer, MAXN, '\n')) {
         string s = buffer;
         cout << s << endl;
     }
+    */
+    
 }

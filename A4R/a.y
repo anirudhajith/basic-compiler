@@ -130,6 +130,7 @@
             string lexValue;              // lexical value, name of identifier etc.
             int level;                    // for printing
             int val = 0;
+            set<string> varsUsed;         // for unused variable elimination
 
 
             string code = "";

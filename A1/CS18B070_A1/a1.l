@@ -53,7 +53,7 @@ char                        { return CHAR; }
 
 \/\/.*
 "/*"([^*]|\*+[^*/])*\*+"/"
-"/*"([^*]|\*+[^*/])*		{ error = 2; printf("***lexing terminated*** [lexer error]: ill-formed comment\n");}
+"/*"([^*]|\*+[^*/])*		{ error = 2; printf("***lexing terminated*** [lexer error]: ill-formed comment\n"); exit(error);}
 
 
 \n	|

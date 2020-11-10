@@ -5,6 +5,7 @@
 %token CHARACTER NUMBER REALNUMBER STRING
 %{
 	#include <stdio.h>
+	#include <stdlib.h>
 	void yyerror(char *);
 	int yylex(void);
 	extern FILE* yyin; 
@@ -269,6 +270,7 @@ expression: value
 void yyerror(char *s) {
     printf("***parsing terminated*** [syntax error]\n");
 	error = 1;
+	exit(error);
 }
 
 int main(int argc, char* argv[]) {
@@ -277,6 +279,7 @@ int main(int argc, char* argv[]) {
 	if (argc != 2) {
 		printf("***process terminated*** [input error]: invalid number of command-line arguments\n");
 		error = 3;
+		exit(error);
 	} else if (yyin = fopen(argv[1], "r")) {
 		yyparse();
 		if (error == 0) {
@@ -292,6 +295,7 @@ int main(int argc, char* argv[]) {
    	} else {
       	printf("***process terminated*** [input error]: no such file %s exists\n", argv[1]);
 		error = 3;
+		exit(error);
    	}
 
 	return error;

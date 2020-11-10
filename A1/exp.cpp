@@ -1,6 +1,6 @@
 int main() {
     int a, b;
     for(a+b;;) {}
-    5,6,"afea";
+    char* potato = "hello" "bye";
     return 0;
 }
